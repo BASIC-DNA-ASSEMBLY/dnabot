@@ -65,6 +65,7 @@ TRANS_SPOT_FNAME_3 = 'D_transformation_ot2_Thermocycler_APIv2.8.py'
 CLIPS_INFO_FNAME = 'clip_run_info.csv'
 FINAL_ASSEMBLIES_INFO_FNAME = 'final_assembly_run_info.csv'
 WELL_OUTPUT_FNAME = 'wells.txt'
+NEW_CONSTRUCTS = 'new_construct_list.csv'
 
 V1_PATH = "\\APIv1\\"
 V2_8_PATH = "\\APIv2.8\\"
@@ -86,7 +87,8 @@ MAX_ASSEMBLIES_PER_PLATE = 96
 FINAL_ASSEMBLIES_PER_CLIP = 13      ##### NB maybe lower better as clips evaporate? #15
 DEFAULT_PART_VOL = 1
 MAX_SOURCE_PLATES = 6
-MAX_FINAL_ASSEMBLY_TIPRACKS = 7
+MAX_FINAL_ASSEMBLY_TIPRACKS = 4
+TIPS_PER_BOX = 96
 
 # Constant dicts
 SPOTTING_VOLS_DICT = {2: 5, 3: 5, 4: 5, 5: 5, 6: 5, 7: 5}
@@ -164,34 +166,34 @@ def __info_from_gui():
 
 
 def main():
-    # Settings
-    args = __cli()
+    # # Settings
+    # args = __cli()
     
-    if args.nogui:
-        etoh_well = args.etoh_well
-        soc_column = args.soc_column
-        construct_path = args.construct_path
-        sources_paths = args.source_paths
-        output_dir = args.output_dir
-        template_dir = args.template_dir
-    else:
-        user_inputs = __info_from_gui()
-        etoh_well = user_inputs['etoh_well']
-        soc_column = user_inputs['soc_column']
-        construct_path = user_inputs['construct_path']
-        sources_paths = user_inputs['sources_paths']
-        output_dir = os.path.dirname(construct_path)
-        template_dir = None
+    # if args.nogui:
+    #     etoh_well = args.etoh_well
+    #     soc_column = args.soc_column
+    #     construct_path = args.construct_path
+    #     sources_paths = args.source_paths
+    #     output_dir = args.output_dir
+    #     template_dir = args.template_dir
+    # else:
+    #     user_inputs = __info_from_gui()
+    #     etoh_well = user_inputs['etoh_well']
+    #     soc_column = user_inputs['soc_column']
+    #     construct_path = user_inputs['construct_path']
+    #     sources_paths = user_inputs['sources_paths']
+    #     output_dir = os.path.dirname(construct_path)
+    #     template_dir = None
 
-    # #### TEST FILES - TO BE DELETED ####
-    # etoh_well = 'A11'
-    # soc_column = 1
-    # construct_path = 'C:\\Users\\ljh119\\OneDrive - Imperial College London\\648_build\\DNA-BOT\\648_constructs\\multistage_builds\\stage_2\\stage2_constructs.csv'
-    # sources_paths = ['C:\\Users\\ljh119\\OneDrive - Imperial College London\\648_build\\DNA-BOT\\648_constructs\\multistage_builds\\stage_2\\stage2_parts.csv']
-    # output_dir = 'C:\\Users\\ljh119\\OneDrive - Imperial College London\\648_build\\DNA-BOT\\648_constructs\\multistage_builds\\stage_2'
-    # template_dir = None
+    #### TEST FILES - TO BE DELETED ####
+    etoh_well = 'A11'
+    soc_column = 1
+    construct_path = 'C:\\Users\\ljh119\\OneDrive - Imperial College London\\Builds\\648_build\\DNA-BOT\\648_constructs\\multistage_builds\\stage_2\\stage2_constructs.csv'
+    sources_paths = ['C:\\Users\\ljh119\\OneDrive - Imperial College London\\Builds\\648_build\\DNA-BOT\\648_constructs\\multistage_builds\\stage_2\\stage2_parts.csv']
+    output_dir = 'C:\\Users\\ljh119\\OneDrive - Imperial College London\\Builds\\648_build\\DNA-BOT\\648_constructs\\multistage_builds\\stage_2'
+    template_dir = None
 
-    # ####################################
+    ####################################
 
     # Args checking
     if len(sources_paths) > len(SOURCE_DECK_POS):
@@ -229,6 +231,12 @@ def main():
     clips_df = generate_clips_df(constructs_list)                   # takes the constructs_list and returns a df of all unique clip reactions with the number of times each one is required to be made and the location(s) of it
     sources_dict = generate_sources_dict(sources_paths)             # returns a dict with source id as keys and location as values
 
+    ####################################
+    # print(constructs_list)
+    # print(clips_df)
+    # print(sources_dict)
+    ####################################
+    
     # output clips csv
     output_file = os.path.join(output_dir, 'clips_df.csv')
     clips_df.to_csv(output_file, index=False)
@@ -327,6 +335,10 @@ def main():
         f.write('Magbead ethanol well: {}'.format(etoh_well))
         f.write('\n')
         f.write('SOC column: {}'.format(soc_column))
+
+    new_constructs_df = generate_new_constructs_df(construct_path, final_assembly_dict_list)
+    new_constructs_df.to_csv(construct_base + '_' + NEW_CONSTRUCTS, index=False) ##############
+    
     print('BOT-2 generator successfully completed!')
 
 
@@ -410,7 +422,7 @@ def generate_clips_df(constructs_list):
     clips_df['plate'] = pd.Series(['0'] * len(clips_df.index), index=clips_df.index)
     clip_count = 0
     
-    for unique_clip_count, clip_number in clips_df['number'].iteritems():   # clip number is the number of each unique clip that must be built
+    for unique_clip_count, clip_number in clips_df['number'].items():   # clip number is the number of each unique clip that must be built
         mag_wells = []
         plates = []         
 
@@ -452,6 +464,7 @@ def generate_clips_dict(clips_df, sources_dict):
     sole variable for the opentrons script "clip.ot2.py".
 
     """
+    # print('\nsources_dict', sources_dict) ###############
     max_part_vol = CLIP_VOL - (T4_BUFF_VOL + BSAI_VOL + T4_LIG_VOL
                                + CLIP_MAST_WATER + 2)
     clips_dict = {'prefixes_wells': [], 'prefixes_plates': [],
@@ -460,43 +473,43 @@ def generate_clips_dict(clips_df, sources_dict):
                   'water_vols': []}
 
     # Generate clips_dict from args
-    try:
-        for _, clip_info in clips_df.iterrows():
-            prefix_linker = clip_info['prefixes']
-            clips_dict['prefixes_wells'].append([sources_dict[prefix_linker][0]]
-                                                * clip_info['number'])
-            clips_dict['prefixes_plates'].append(
-                [handle_2_columns(sources_dict[prefix_linker])[2]] * clip_info['number'])
-            suffix_linker = clip_info['suffixes']
-            clips_dict['suffixes_wells'].append([sources_dict[suffix_linker][0]]
-                                                * clip_info['number'])
-            clips_dict['suffixes_plates'].append(
-                [handle_2_columns(sources_dict[suffix_linker])[2]] * clip_info['number'])
-            part = clip_info['parts']
-            clips_dict['parts_wells'].append([sources_dict[part][0]]
-                                             * clip_info['number'])
-            clips_dict['parts_plates'].append([handle_2_columns(sources_dict[part])[2]]
-                                              * clip_info['number'])
-            if not sources_dict[part][1]:                               # add default vols for part and water if not user defined
-                clips_dict['parts_vols'].append([DEFAULT_PART_VOL] *
-                                                clip_info['number'])
-                clips_dict['water_vols'].append([max_part_vol - DEFAULT_PART_VOL]
-                                                * clip_info['number'])
-            else:                                                       # add bespoke vols for part and water if part has a declared conc
-                part_vol = round(
-                    PART_PER_CLIP / float(sources_dict[part][1]), 1)
-                if part_vol < MIN_VOL:
-                    part_vol = MIN_VOL
-                elif part_vol > max_part_vol:
-                    part_vol = max_part_vol
-                water_vol = max_part_vol - part_vol
-                clips_dict['parts_vols'].append(
-                    [part_vol] * clip_info['number'])
-                clips_dict['water_vols'].append(
-                    [water_vol] * clip_info['number'])
-                    
-    except KeyError:
-        sys.exit('likely part/linker not listed in sources.csv')
+    # try:
+    for _, clip_info in clips_df.iterrows():
+        prefix_linker = clip_info['prefixes']
+        clips_dict['prefixes_wells'].append([sources_dict[prefix_linker][0]]
+                                            * clip_info['number'])
+        clips_dict['prefixes_plates'].append(
+            [handle_2_columns(sources_dict[prefix_linker])[2]] * clip_info['number'])
+        suffix_linker = clip_info['suffixes']
+        clips_dict['suffixes_wells'].append([sources_dict[suffix_linker][0]]
+                                            * clip_info['number'])
+        clips_dict['suffixes_plates'].append(
+            [handle_2_columns(sources_dict[suffix_linker])[2]] * clip_info['number'])
+        part = clip_info['parts']
+        clips_dict['parts_wells'].append([sources_dict[part][0]]
+                                            * clip_info['number'])
+        clips_dict['parts_plates'].append([handle_2_columns(sources_dict[part])[2]]
+                                            * clip_info['number'])
+        if not sources_dict[part][1]:                               # add default vols for part and water if not user defined
+            clips_dict['parts_vols'].append([DEFAULT_PART_VOL] *
+                                            clip_info['number'])
+            clips_dict['water_vols'].append([max_part_vol - DEFAULT_PART_VOL]
+                                            * clip_info['number'])
+        else:                                                       # add bespoke vols for part and water if part has a declared conc
+            part_vol = round(
+                PART_PER_CLIP / float(sources_dict[part][1]), 1)
+            if part_vol < MIN_VOL:
+                part_vol = MIN_VOL
+            elif part_vol > max_part_vol:
+                part_vol = max_part_vol
+            water_vol = max_part_vol - part_vol
+            clips_dict['parts_vols'].append(
+                [part_vol] * clip_info['number'])
+            clips_dict['water_vols'].append(
+                [water_vol] * clip_info['number'])
+                
+    # except KeyError:
+    #     sys.exit('likely part/linker not listed in sources.csv')
     
     for key, value in clips_dict.items():                               # unlist all sublist in clips dict to yield a single list as the value for every key
         clips_dict[key] = [item for sublist in value for item in sublist]
@@ -532,12 +545,14 @@ def generate_clips_dict_list(clips_df, sources_dict):
 
     # CLIP_COUNT = len(clips_df)
     CLIP_COUNT = clips_df['number'].sum()
-    CLIP_PLATE_COUNT = CLIP_COUNT // MAX_CLIPS_PER_PLATE + 1            # plus one to include final partially full plate
+    CLIP_PLATE_COUNT = int(CLIP_COUNT // MAX_CLIPS_PER_PLATE + 1)       # plus one to include final partially full plate
 
     # Error 
     if clips_df['number'].sum() > MAX_CLIPS_TOTAL:
-        raise ValueError(
-            'Number of CLIP reactions exceeds {}. Reduce number of constructs in construct.csv.'.format(MAX_CLIPS_TOTAL))
+        raise ValueError('Number of CLIP reactions exceeds {}. Reduce number of constructs in construct.csv.'.format(MAX_CLIPS_TOTAL))
+    
+    if clips_df['number'].sum() < 96:                                   # if less clips required than one full plate, the second desk slot can be used for tips
+        MAX_FINAL_ASSEMBLY_TIPRACKS = 5
 
     clips_dict_list = []
 
@@ -552,16 +567,21 @@ def generate_clips_dict_list(clips_df, sources_dict):
         sub_clip_df = long_clip_df.iloc[subset_lower:subset_upper, :]
         sub_clip_dict = generate_clips_dict(sub_clip_df, sources_dict)
         clips_dict_list.append(sub_clip_dict)                           # generate and append sub_clip_dict to list - allows for multiple clip reactions
+
     return clips_dict_list
 
 
 def generate_final_assembly_dict(constructs_list, clips_df):
-    """Using constructs_list and clips_df, returns a dictionary of final
-    assemblies with keys defining destination plate well positions and values
-    indicating which clip reaction wells are used.
+    """Using constructs_list and clips_df, returns keys and values for a 
+    dictionary of final assemblies; with keys defining destination plate 
+    well positions, and values indicating which clip reaction wells are used.
 
     """
-    # final_assembly_dict = {}                                                      # old version generates dictionary
+
+    # print(constructs_list)
+    # print(clips_df)
+
+    # final_assembly_dict = {}                                                      # old version (generates dictionary)
     final_assembly_dict_keys = []
     final_assembly_dict_values = []
 
@@ -572,23 +592,23 @@ def generate_final_assembly_dict(constructs_list, clips_df):
         construct_plate_list = []
 
         for _, clip in construct_df.iterrows():                                     # for each clip in construct
-            clip_info = clips_df[(clips_df['prefixes'] == clip['prefixes']) &       # find clips in clips_df that match required clip
+            clip_info = clips_df[(clips_df['prefixes'] == clip['prefixes']) &       # find clips in clips_df with the correct parts required for this clip
                                  (clips_df['parts'] == clip['parts']) &
                                  (clips_df['suffixes'] == clip['suffixes'])]
             
-            clip_num = int(clip_info.index[0])                                      # row index of clip in clips_df
-            clip_wells = clip_info.at[clip_num, 'mag_well']                         # list of all mag_wells for clip
-            clip_plates = clip_info.at[clip_num, 'plate']                           # list of all plates for clip
+            clip_num = int(clip_info.index[0])                                      # row index of this clip in clips_df
+            clip_wells = clip_info.at[clip_num, 'mag_well']                         # list of all mag_wells for this clip
+            clip_plates = clip_info.at[clip_num, 'plate']                           # list of all plates for this clip
 
-            chosen_well = int(clips_count[clip_num] // FINAL_ASSEMBLIES_PER_CLIP)   # next viable mag well for clip
-            clip_well = clip_wells[chosen_well]
-            clip_plate = clip_plates[chosen_well]
+            chosen_well_index = int(clips_count[clip_num] // FINAL_ASSEMBLIES_PER_CLIP)     # next viable mag well for this clip (i.e. the nth well in the set of total number of wells for this unique clip)  
+            clip_well = clip_wells[chosen_well_index]
+            clip_plate = clip_plates[chosen_well_index]
             construct_well_list.append(clip_well)
             construct_plate_list.append(clip_plate)
 
             clips_count[clip_num] = clips_count[clip_num] + 1
 
-        # final_assembly_dict[tip_counter(construct_index)] = [construct_well_list, construct_plate_list]   # generate dictionary
+        # final_assembly_dict[tip_counter(construct_index)] = [construct_well_list, construct_plate_list]   #### old version (generates dictionary)
         final_assembly_dict_keys.append(tip_counter(construct_index))
         final_assembly_dict_values.append([construct_well_list, construct_plate_list])
 
@@ -597,43 +617,102 @@ def generate_final_assembly_dict(constructs_list, clips_df):
 
 
 def generate_final_assembly_dict_list(constructs_list, clips_df):
-    ''' Runs the generate_final_assembly_dict function producing ORDERED lists of 
-    keys and values for the assembly source and destination (index of list denotes 
-    the pair). Subsets key and value lists into chunks of up to 96 (max assemblies 
+    ''' Runs the generate_final_assembly_dict function producing a list of 
+    dictionaries of the assembly source and destination. Subsets the list of 
+    assemblies so that 1) the maximum number of tips used does no to 96 (max assemblies 
     per plate). A sub dictionary is generated for each chunk and then function  
     returns a list of the resulting sub assembly dicts
     
     This method ensures that subsequent assembly scripts do not reuse empty clip 
     wells while also keeping the correct destination well locations '''
 
-    ASSEMBLY_COUNT = len(constructs_list)
-    ASSEMBLY_PLATE_COUNT = ASSEMBLY_COUNT // MAX_ASSEMBLIES_PER_PLATE + 1           # plus one to include final partially full plate
+    CONSTRUCT_COUNT_TOTAL = len(constructs_list)
+    # ASSEMBLY_PLATE_COUNT = CONSTRUCT_COUNT_TOTAL // MAX_ASSEMBLIES_PER_PLATE + 1           # plus one to include final partially full plate ################# old version
+
+
+    #################################
+    '''
+    It would be better to subset the assemblies based on the number of tips required as well as the max number of assemblies allowed 
+    on a plate. This is because for longer constructs, the number of tips required in total exceeds the total number of tips that 
+    could be available on the board. 
+
+    Maybe both limitations (number of assemblies and number of tips) could be combined together if the MAX_ASSEMBLIES_PER_PLATE was 
+    calculated dynamically rather than being declared. This is sort of done within the calculate_final_assembly_tipracks function.
+
+    I also need to output a new construct csv as a dictionary saying where each construct is on the plate.
+    '''
+    #################################
 
     # # Error ########################### NO ERROR AS NO MAX ASSEMBLIES
     # if clips_df['number'].sum() > MAX_CLIPS_TOTAL:
     #     raise ValueError(
     #         'Number of CLIP reactions exceeds {}. Reduce number of constructs in construct.csv.'.format(MAX_CLIPS_TOTAL))
 
-    # final_assembly_dict = generate_final_assembly_dict(constructs_list, clips_df)
+    # final_assembly_dict = generate_final_assembly_dict(constructs_list, clips_df) ###### old version (returns dictionary rather than keys and values)
+
     final_assembly_dict_keys, final_assembly_dict_values = generate_final_assembly_dict(constructs_list, clips_df)
 
+    construct_count  = 0                                                                         # number of assemblies for current assembly script (<96)
+    master_mix_tips = len(list({len(sublist[0]) for sublist in final_assembly_dict_values}))    # returns the length list of unique construct lengths in build - this represents the number of tips needed for MM transfer
+    tip_count       = master_mix_tips
+
+    assembly_subset_lower = 0                                                                   # set upper and lower bounds for subset of assemblies for a given plate
+    assembly_subset_upper = 0
+    
+    keys    = []
+    values  = []
     assembly_dict_list = []
+    
+    for i, construct in enumerate(final_assembly_dict_values):
+        
+        is_new_assembly_tips    = bool((tip_count + len(construct[0])) // (TIPS_PER_BOX * MAX_FINAL_ASSEMBLY_TIPRACKS)) # new assembly when out of tips (tips required exceeds cap)
+        is_new_assembly_wells   = construct_count == MAX_ASSEMBLIES_PER_PLATE                                            # new assembly when over assembly limit (exceeds number of assembly plate wells)
+        is_new_assembly_end     = i+1 == len(final_assembly_dict_values)                                                # new assembly when final construct reached
+        is_new_assembly = is_new_assembly_tips or is_new_assembly_wells or is_new_assembly_end
 
-    for plate in range(ASSEMBLY_PLATE_COUNT):
-        subset_lower = (plate * MAX_ASSEMBLIES_PER_PLATE)               # set upper and lower bounds for subset of assemblies for a given plate
-        subset_upper = subset_lower + MAX_ASSEMBLIES_PER_PLATE
+        if is_new_assembly:
+            assembly_subset_lower = assembly_subset_upper
+            assembly_subset_upper = i
 
-        if subset_upper > ASSEMBLY_COUNT:                               # set total number number of assemblies as upper bound if plate incomplete
-            subset_upper = ASSEMBLY_COUNT
+            if is_new_assembly_end:
+                keys.append(tip_counter(construct_count))
+                assembly_subset_upper = CONSTRUCT_COUNT_TOTAL            #
 
-        # sub_assembly_df = constructs_list[subset_lower:subset_upper]
-        # sub_assembly_dict = generate_final_assembly_dict(sub_assembly_df, clips_df)
+            values = final_assembly_dict_values[assembly_subset_lower:assembly_subset_upper]
 
-        keys = [tip_counter(i) for i in list(range(subset_upper - subset_lower))]
-        values = final_assembly_dict_values[subset_lower:subset_upper]
-        sub_assembly_dict = {keys[i]: values[i] for i in range(len(keys))}
+            sub_assembly_dict = {keys[i]: values[i] for i in range(len(keys))}
+            assembly_dict_list.append(sub_assembly_dict)                # generate and append sub_clip_dict to list - allows for multiple clip reactions
 
-        assembly_dict_list.append(sub_assembly_dict)                    # generate and append sub_clip_dict to list - allows for multiple clip reactions
+            keys    = []
+            values  = []
+
+            tip_count = master_mix_tips                                 # reset tips for new assembly and include tips for distribution of master mix
+            construct_count = 0
+
+        keys.append(tip_counter(construct_count))
+        construct_count += 1 
+
+    # assembly_dict_list_old = [] ############# old version - iterates by assembly and not by tip, subsets only by max assemblies not by max tips
+
+    # for plate in range(ASSEMBLY_PLATE_COUNT):
+    #     subset_lower = (plate * MAX_ASSEMBLIES_PER_PLATE)               # set upper and lower bounds for subset of assemblies for a given plate
+    #     subset_upper = subset_lower + MAX_ASSEMBLIES_PER_PLATE
+
+    #     if subset_upper > CONSTRUCT_COUNT_TOTAL:                               # set total number number of assemblies as upper bound if plate incomplete
+    #         subset_upper = CONSTRUCT_COUNT_TOTAL
+
+    #     # sub_assembly_df = constructs_list[subset_lower:subset_upper]
+    #     # sub_assembly_dict = generate_final_assembly_dict(sub_assembly_df, clips_df)
+
+    #     keys = [tip_counter(i) for i in list(range(subset_upper - subset_lower))]
+    #     values = final_assembly_dict_values[subset_lower:subset_upper]
+    #     sub_assembly_dict = {keys[i]: values[i] for i in range(len(keys))}
+    #     # print(values, '\n')
+
+    #     assembly_dict_list_old.append(sub_assembly_dict)                    # generate and append sub_clip_dict to list - allows for multiple clip reactions
+
+    
+
 
     return assembly_dict_list
 
@@ -649,9 +728,9 @@ def calculate_final_assembly_tipracks(final_assembly_dict):
     for values in final_assembly_dict.values():
         final_assembly_lens.append(len(values[0]))                      # create a list of number of clips per assembly 
         
-    master_mix_tips = len(list(set(final_assembly_lens)))               # number of different build lengths in construct build
+    master_mix_tips = len(list(set(final_assembly_lens)))               # number of different unique build lengths in construct build
     total_tips = master_mix_tips + sum(final_assembly_lens) 
-    final_assembly_tipracks = (total_tips - 1) // 96 + 1
+    final_assembly_tipracks = (total_tips - 1) // TIPS_PER_BOX + 1
     if final_assembly_tipracks > MAX_FINAL_ASSEMBLY_TIPRACKS:
         raise ValueError(
             'Final assembly tiprack number exceeds number of slots. Reduce number of constructs in constructs.csv')
@@ -720,6 +799,29 @@ def generate_ot2_script(ot2_script_path, template_path, **kwargs):
             for index, line in enumerate(rf):
                 if index >= function_start - 1:
                     wf.write(line)
+
+
+def generate_new_constructs_df(construct_path, final_assembly_dict_list):
+    """Takes the user supplied constructs csv and reallocates the constructs 
+    according to the new order applied in the 
+    'generate_final_assembly_dict_list' function, returning a new constructs
+    csv with the new locations of each construct given.
+    """
+    assembly_list   = []
+    well_list       = []
+
+    for assembly_count, assembly_dict in enumerate(final_assembly_dict_list):
+        for well in assembly_dict.keys():
+            assembly_list.append(assembly_count + 1)
+            well_list.append(well)
+    
+    constructs_df = pd.read_csv(construct_path)
+
+    constructs_df.drop(constructs_df.columns[0], axis=1, inplace=True)
+    constructs_df.insert(0, "Assembly", assembly_list)
+    constructs_df.insert(1, "Well", well_list)
+
+    return constructs_df
 
 
 def generate_master_mix_df(clip_number):

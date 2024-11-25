@@ -1,6 +1,8 @@
 from opentrons import protocol_api
 
-# Rename to 'purification_template' and paste into 'template_ot2_scripts' folder in DNA-BOT to use
+''' To Do
+     - explicitly code for tip change
+'''
 
 metadata = {
      'apiLevel': '2.8',
@@ -16,7 +18,7 @@ ethanol_well='A3'
 
 # opentrons_simulate.exe dnabot\template_ot2_scripts\purification_template_APIv2.8.py --custom-labware-path 'labware\Labware definitions'
 
-sample_number=75
+sample_number=81
 ethanol_well='A11'
 
 
