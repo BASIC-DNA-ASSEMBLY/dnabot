@@ -14,71 +14,86 @@ metadata = {
 # parts_volume=20
 
 # example dictionary produced by DNA-BOT for a single construct containing 4 parts, un-comment and run to test the template
-clips_dict={"prefixes_wells": ["A1", "B1", "C1", "D1"],
-            "prefixes_plates": ["2", "2", "2", "2"],
-            "suffixes_wells": ["A2", "B2", "C2", "D2"],
-            "suffixes_plates": ["2", "2", "2", "2"],
-            "parts_wells": ["A3", "B3", "C3", "D3"],
-            "parts_plates": ["2", "2", "2", "2"],
-            "parts_vols": [1, 1, 1, 1],
-            "water_vols": [7.0, 7.0, 7.0, 7.0]}
+# clips_dict={"prefixes_wells": ["A1", "B1", "C1", "D1"],
+#             "prefixes_plates": ["2", "2", "2", "2"],
+#             "suffixes_wells": ["A2", "B2", "C2", "D2"],
+#             "suffixes_plates": ["2", "2", "2", "2"],
+#             "parts_wells": ["A3", "B3", "C3", "D3"],
+#             "parts_plates": ["2", "2", "2", "2"],
+#             "parts_vols": [1, 1, 1, 1],
+#             "water_vols": [7.0, 7.0, 7.0, 7.0]}
 
 # __LABWARES is expected to be redefined by "generate_ot2_script" method
 # Test dict - values used here for simulation use generic Opentrons definitions to avoid
 # specifying custom labware in simulate, which is not straightforward
 # custom labware currently commented out
-__LABWARES={
-    "p20_single": {"id": "p20_single_gen2"}, 
-    "p300_multi": {"id": "p300_multi_gen2"}, 
-    "mag_deck": {"id": "magdeck"}, 
-    "96_tiprack_20ul": {"id": "opentrons_96_tiprack_20ul"}, 
-    "96_tiprack_300ul": {"id": "opentrons_96_tiprack_300ul"},
-    "24_tuberack_1500ul": {"id": "opentrons_24_tuberack_nest_1.5ml_snapcap"},
-    "clip_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"},
-    "mix_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"},
-    "clip_source_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"},
-    #comment in out equipment below for simulate or run
-    #"clip_plate": {"id": "4ti0960rig_96_wellplate_200ul"},
-    #"mix_plate": {"id": "4ti0960rig_96_wellplate_200ul"},
-    #"clip_source_plate": {"id": "4ti0960rig_96_wellplate_200ul"},
-    "clip_source_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"},
-    "clip_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"},
-    "mix_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"},
-    #"clip_source_plate": {"id": "4ti0960rig_96_wellplate_200ul"},
-    #"clip_plate": {"id": "4ti0960rig_96_wellplate_200ul"},
-    #"mix_plate": {"id": "4ti0960rig_96_wellplate_200ul"},  
-    "agar_plate_step_4": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
-    "12_reservoir_21000ul": {"id": "4ti0131_12_reservoir_21000ul"}, 
-    "96_deepwellplate_2ml": {"id": "4ti0136_96_wellplate_2200ul"}}
-        #BELOW is the code that defines the labwares in the clip script
-        # self.user_settings['labwares']['p20_single']['id'] = self.labware_p10_single_entry.get()
-        # self.user_settings['labwares']['p300_multi']['id'] = self.labware_p300_multi_entry.get()
-        # self.user_settings['labwares']['mag_deck']['id'] = self.labware_mag_deck_entry.get()
-        # self.user_settings['labwares']['24_tuberack_1500ul']['id'] = self.labware_24_tuberack_1500ul_entry.get()
-        # self.user_settings['labwares']['96_tiprack_20ul']['id'] = self.labware_96_tiprack_20ul_entry.get()
-        # self.user_settings['labwares']['96_tiprack_300ul']['id'] = self.labware_96_tiprack_300ul_entry.get()
-        # self.user_settings['labwares']['clip_source_plate']['id'] = self.labware_clip_source_plate_entry.get()
-        # self.user_settings['labwares']['clip_plate']['id'] = self.labware_clip_plate_entry.get()
-        # self.user_settings['labwares']['mix_plate']['id'] = self.labware_mix_plate_entry.get()
-        # self.user_settings['labwares']['final_assembly_plate']['id'] = self.labware_final_assembly_plate_entry.get()
-        # self.user_settings['labwares']['transfo_plate']['id'] = self.labware_transfo_plate_entry.get()
-        # self.user_settings['labwares']['transfo_plate_wo_thermo']['id'] = self.labware_transfo_plate_wo_thermo_entry.get()
-        # self.user_settings['labwares']['agar_plate']['id'] = self.agar_plate_entry.get()
-        # self.user_settings['labwares']['12_reservoir_21000ul']['id'] = self.labware_12_reservoir_21000ul_entry.get()
-        # self.user_settings['labwares']['96_deepwellplate_2ml']['id'] = self.labware_96_deepwellplate_2ml_entry.get()
-        # self.user_settings['labwares']['12_corning_wellplate']['id'] = self.labware_12_corning_wellplate_entry.get()
-
-__PARAMETERS={
-    "clip_keep_thermo_lid_closed": {"id": "No"},
-    "premix_linkers": {"id": 'Yes'},
-    "premix_parts": {"id": 'Yes'},
-    "parts_volume": {"value": 30},
-    "linkers_volume": {"value": 20},
-    "thermo_temp": {"value": 4}
-}
+# __LABWARES={
+#     #comment in out equipment below for simulate or run    
+#     "p20_single": {"id": "p20_single_gen2"}, 
+#     "p300_multi": {"id": "p300_multi_gen2"}, 
+#     "mag_deck": {"id": "magneticModuleV1"}, 
+#     "96_tiprack_20ul": {"id": "opentrons_96_tiprack_20ul"}, 
+#     "96_tiprack_300ul": {"id": "opentrons_96_tiprack_300ul"},
+#     "24_tuberack_1500ul": {"id": "opentrons_24_tuberack_nest_1.5ml_snapcap"},
+#     "clip_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"},
+#     "mix_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"},
+#     "clip_source_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"},
+#     #"clip_plate": {"id": "4ti0960rig_96_wellplate_200ul"},
+#     #"mix_plate": {"id": "4ti0960rig_96_wellplate_200ul"},
+#     #"clip_source_plate": {"id": "4ti0960rig_96_wellplate_200ul"},
+#     "clip_source_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"},
+#     "clip_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"},
+#     "mix_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"},
+#     #"clip_source_plate": {"id": "4ti0960rig_96_wellplate_200ul"},
+#     #"clip_plate": {"id": "4ti0960rig_96_wellplate_200ul"},
+#     #"mix_plate": {"id": "4ti0960rig_96_wellplate_200ul"},  
+#     "agar_plate_step_4": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
+#     "12_reservoir_21000ul": {"id": "4ti0131_12_reservoir_21000ul"}, 
+#     "96_deepwellplate_2ml": {"id": "4ti0136_96_wellplate_2200ul"}}
+        
+# __PARAMETERS={
+#     "clip_keep_thermo_lid_closed": {"id": "No"},
+#     "premix_linkers": {"id": 'Yes'},
+#     "premix_parts": {"id": 'Yes'},
+#     "parts_volume": {"value": 30},
+#     "linkers_volume": {"value": 20},
+#     "thermo_temp": {"value": 4}
+# }
 
 # Parameters for the clip reaction step
 # self.user_settings["parameters"]["clip_keep_thermo_lid_closed"]["value"] = to_numeric_value(self.param_clip_thermo_lid_closed.get())
+
+
+clips_dict={"prefixes_wells": ["C1", "A1", "E1", "B2", "D2", "B2"], 
+            "prefixes_plates": ["2", "2", "2", "2", "2", "2"], 
+            "suffixes_wells": ["B1", "A2", "C2", "E2", "D1", "D1"], 
+            "suffixes_plates": ["2", "2", "2", "2", "2", "2"], 
+            "parts_wells": ["A3", "B3", "C3", "D3", "E3", "D3"], 
+            "parts_plates": ["2", "2", "2", "2", "2", "2"], 
+            "parts_vols": [1, 1, 1, 1, 1, 1], 
+            "water_vols": [7.0, 7.0, 7.0, 7.0, 7.0, 7.0]}
+__LABWARES={"p20_single": {"id": "p20_single_gen2"}, 
+            "p300_multi": {"id": "p300_multi_gen2"}, 
+            "mag_deck": {"id": "magneticModuleV1"}, 
+            "96_tiprack_20ul": {"id": "opentrons_96_tiprack_20ul"}, 
+            "96_tiprack_300ul": {"id": "opentrons_96_tiprack_300ul"}, 
+            #"24_tuberack_1500ul": {"id": "e14151500starlab_24_tuberack_1500ul"}, 
+            "24_tuberack_1500ul": {"id": "opentrons_24_tuberack_nest_1.5ml_snapcap"},
+            "clip_source_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
+            "clip_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
+            "mix_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
+            "final_assembly_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
+            "transfo_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
+            "transfo_plate_wo_thermo": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
+            "agar_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
+            "12_reservoir_21000ul": {"id": "nest_12_reservoir_15ml"}, 
+            "96_deepwellplate_2ml": {"id": "nest_96_wellplate_2ml_deep"}, 
+            "12_corning_wellplate": {"id": "corning_12_wellplate_6.9ml_flat"}
+            #"clip_plate": {"id": "4ti0960rig_96_wellplate_200ul"},
+            #"mix_plate": {"id": "4ti0960rig_96_wellplate_200ul"},
+            #"clip_source_plate": {"id": "4ti0960rig_96_wellplate_200ul"}
+            }
+__PARAMETERS={"clip_keep_thermo_lid_closed": {"value": "No", "id": "No"}, "premix_linkers": {"value": "Yes", "id": "No"}, "premix_parts": {"value": "Yes", "id": "Yes"}, "linkers_volume": {"value": 20}, "parts_volume": {"value": 20}, "thermo_temp": {"value": 4}, "purif_magdeck_height": {"value": 10.8}, "purif_wash_time": {"value": 0.5}, "purif_bead_ratio": {"value": 1.8}, "purif_incubation_time": {"value": 5}, "purif_settling_time": {"value": 2}, "purif_drying_time": {"value": 5}, "purif_elution_time": {"value": 2}, "transfo_incubation_temp": {"value": 4}, "transfo_incubation_time": {"value": 20}}
 
 
 def run(protocol: protocol_api.ProtocolContext):
@@ -119,8 +134,6 @@ def run(protocol: protocol_api.ProtocolContext):
     MASTER_MIX_WELL = 'A1'
     WATER_WELL = 'A2'
     MASTER_MIX_VOLUME = 20
-
-    # Old Mix settings
 
     #choose to enable pre-mix for prefixes/suffixes and parts plate
     #Mix_linkers_bool = __PARAMETERS["premix_linkers"]['id']

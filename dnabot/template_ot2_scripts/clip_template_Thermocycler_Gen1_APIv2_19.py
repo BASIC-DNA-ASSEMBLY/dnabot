@@ -99,7 +99,7 @@ def run(protocol: protocol_api.ProtocolContext):
         print('Define labware must be changed to use', PIPETTE_TYPE)
         exit()
     #thermocycler module gen2 - turn off lid and cool plate to reduce evaporation
-    tc_mod = protocol.load_module(module_name="thermocyclerModuleV2")
+    tc_mod = protocol.load_module(module_name="thermocyclerModuleV1")
     tc_mod.open_lid()
     tc_mod.deactivate_lid()
     tc_mod.set_block_temperature(temperature=__PARAMETERS['thermo_temp']['value']) 

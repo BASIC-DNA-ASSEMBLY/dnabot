@@ -1,42 +1,42 @@
 from opentrons import protocol_api
+import numpy as np
 
 # Rename to 'clip_template' and paste into 'template_ot2_scripts' folder in DNA-BOT to use
 
 #metadata
 metadata = {
-     'apiLevel': '2.8',
+     'apiLevel': '2.19',
      'protocolName': 'DNABOT Step 1: Clip Reaction with thermocycler',
-     'description': 'Implements linker ligation reactions using an opentrons OT-2, including the thermocycler module.'
+     'description': 'Implements linker ligation reactions using an opentrons OT-2, including the thermocycler module gen2.'
 }
 
 
 # example dictionary produced by DNA-BOT for a single construct containing 5 parts, un-comment and run to test the template
-#clips_dict={
-#   "prefixes_wells": ["A8", "A7", "C5", "C7", "C10"], 
-#   "prefixes_plates": ["2", "2", "2", "2", "2"], 
-#   "suffixes_wells": ["B7", "C1", "C2", "C3", "B8"], 
-#   "suffixes_plates": ["2", "2", "2", "2", "2"], 
-#   "parts_wells": ["E2", "F2", "C2", "B2", "D2"], 
-#   "parts_plates": ["5", "5", "5", "5", "5"], 
-#   "parts_vols": [1, 1, 1, 1, 1], 
-#   "water_vols": [7.0, 7.0, 7.0, 7.0, 7.0]
-# }
+clips_dict={"prefixes_wells": ["A8", "A7", "C5", "C7", "C10"], "prefixes_plates": ["2", "2", "2", "2", "2"], "suffixes_wells": ["B7", "C1", "C2", "C3", "B8"], "suffixes_plates": ["2", "2", "2", "2", "2"], "parts_wells": ["E2", "F2", "C2", "B2", "D2"], "parts_plates": ["5", "5", "5", "5", "5"], "parts_vols": [1, 1, 1, 1, 1], "water_vols": [7.0, 7.0, 7.0, 7.0, 7.0]}
 
 # __LABWARES is expected to be redefined by "generate_ot2_script" method
 # Test dict
-# __LABWARES={
-#   "p20_single": {"id": "p20_single_gen2"}, 
-#   "p300_multi": {"id": "p300_multi_gen2"}, 
-#   "mag_deck": {"id": "magdeck"}, 
-#   "96_tiprack_20ul": {"id": "opentrons_96_tiprack_20ul"}, 
-#   "96_tiprack_300ul": {"id": "opentrons_96_tiprack_300ul"}, 
-#   "24_tuberack_1500ul": {"id": "e14151500starlab_24_tuberack_1500ul"}, 
-#   "96_wellplate_200ul_pcr_step_14": {"id": "4ti0960rig_96_wellplate_200ul"}, 
-#   "96_wellplate_200ul_pcr_step_23": {"id": "4ti0960rig_96_wellplate_200ul"}, 
-#   "agar_plate_step_4": {"id": "4ti0960rig_96_wellplate_200ul"}, 
-#   "12_reservoir_21000ul": {"id": "4ti0131_12_reservoir_21000ul"}, 
-#   "96_deepwellplate_2ml": {"id": "4ti0136_96_wellplate_2200ul"}
-# }
+
+__LABWARES={
+    "p20_single": {"id": "p20_single_gen2"}, 
+    "p300_multi": {"id": "p300_multi_gen2"}, 
+    "mag_deck": {"id": "magdeck"}, 
+    "96_tiprack_20ul": {"id": "opentrons_96_tiprack_20ul"}, 
+    "96_tiprack_300ul": {"id": "opentrons_96_tiprack_300ul"}, 
+    "24_tuberack_1500ul": {"id": "e14151500starlab_24_tuberack_1500ul"}, 
+    "96_wellplate_200ul_pcr_step_14": {"id": "4ti0960rig_96_wellplate_200ul"}, 
+    "96_wellplate_200ul_pcr_step_23": {"id": "4ti0960rig_96_wellplate_200ul"}, 
+    "clip_plate": {"id": "4ti0960rig_96_wellplate_200ul"},
+    "mix_plate": {"id": "4ti0960rig_96_wellplate_200ul"},
+    "clip_source_plate": {"id": "4ti0960rig_96_wellplate_200ul"},
+    "agar_plate_step_4": {"id": "4ti0960rig_96_wellplate_200ul"}, 
+    "12_reservoir_21000ul": {"id": "4ti0131_12_reservoir_21000ul"}, 
+    "96_deepwellplate_2ml": {"id": "4ti0136_96_wellplate_2200ul"}}
+
+clips_dict={"prefixes_wells": ["C1", "A1", "E1", "B2", "D2", "B2"], "prefixes_plates": ["2", "2", "2", "2", "2", "2"], "suffixes_wells": ["B1", "A2", "C2", "E2", "D1", "D1"], "suffixes_plates": ["2", "2", "2", "2", "2", "2"], "parts_wells": ["A3", "B3", "C3", "D3", "E3", "D3"], "parts_plates": ["2", "2", "2", "2", "2", "2"], "parts_vols": [1, 1, 1, 1, 1, 1], "water_vols": [7.0, 7.0, 7.0, 7.0, 7.0, 7.0]}
+__LABWARES={"p20_single": {"id": "p20_single_gen2"}, "p300_multi": {"id": "p300_multi_gen2"}, "mag_deck": {"id": "magneticModuleV1"}, "96_tiprack_20ul": {"id": "opentrons_96_tiprack_20ul"}, "96_tiprack_300ul": {"id": "opentrons_96_tiprack_300ul"}, "24_tuberack_1500ul": {"id": "e14151500starlab_24_tuberack_1500ul"}, "clip_source_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "clip_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "mix_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "final_assembly_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "transfo_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "transfo_plate_wo_thermo": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "agar_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "12_reservoir_21000ul": {"id": "nest_12_reservoir_15ml"}, "96_deepwellplate_2ml": {"id": "nest_96_wellplate_2ml_deep"}, "12_corning_wellplate": {"id": "corning_12_wellplate_6.9ml_flat"}}
+__PARAMETERS={"clip_keep_thermo_lid_closed": {"value": "No", "id": "No"}, "premix_linkers": {"value": "Yes", "id": "No"}, "premix_parts": {"value": "Yes", "id": "Yes"}, "linkers_volume": {"value": 20}, "parts_volume": {"value": 20}, "thermo_temp": {"value": 4}, "purif_magdeck_height": {"value": 10.8}, "purif_wash_time": {"value": 0.5}, "purif_bead_ratio": {"value": 1.8}, "purif_incubation_time": {"value": 5}, "purif_settling_time": {"value": 2}, "purif_drying_time": {"value": 5}, "purif_elution_time": {"value": 2}, "transfo_incubation_temp": {"value": 4}, "transfo_incubation_time": {"value": 20}}
+
 
 def run(protocol: protocol_api.ProtocolContext):
 # added run function for API 2.8
@@ -58,19 +58,20 @@ def run(protocol: protocol_api.ProtocolContext):
         exit()
     #thermocycler module gen2 - turn off lid and cool plate to reduce evaporation
     tc_mod = protocol.load_module('thermocycler module gen2')
-    #tc_mod = protocol.load_module(module_name="thermocyclerModuleV2")
     tc_mod.deactivate_lid()
     tc_mod.set_block_temperature(temperature=4) 
     # Destination Plates
     DESTINATION_PLATE_TYPE = __LABWARES['clip_plate']['id']
-    # Loads destination plate onto Thermocycler Module
+    # Loads destination plate onto thermocycler module gen2
     destination_plate = tc_mod.load_labware(DESTINATION_PLATE_TYPE)
 
     # Source Plates
     SOURCE_PLATE_TYPE = __LABWARES['clip_source_plate']['id']
-   
+            # modified from custom labware as API 2 doesn't support labware.create anymore, so the old add_labware script can't be used
+
     # Tube Rack
     TUBE_RACK_TYPE = __LABWARES['24_tuberack_1500ul']['id']
+            # modified from custom labware as API 2 doesn't support labware.create anymore, so the old add_labware script can't be used
     TUBE_RACK_POSITION = '4'
     MASTER_MIX_WELL = 'A1'
     WATER_WELL = 'A2'
@@ -79,6 +80,9 @@ def run(protocol: protocol_api.ProtocolContext):
     # Mix settings
     LINKER_MIX_SETTINGS = (1, 3)
     PART_MIX_SETTINGS = (4, 5)
+    #choose to enable pre-mix for prefixes/suffixes and parts plate
+    #Mix_prefix_and_suffix_bool = True
+    #Mix_parts_plate_bool = True
 
     def clip(
             prefixes_wells,
@@ -133,17 +137,22 @@ def run(protocol: protocol_api.ProtocolContext):
         for key in source_plates_keys:
             source_plates[key]=protocol.load_labware(SOURCE_PLATE_TYPE, key)
 
+        ###Pre-Mixing of Prefixes and Suffixes or Parts
+
+        mix_prefixes_suffixes_function(Mix_prefix_and_suffix_bool, clips_dict, pipette)
+        mix_parts_function(Mix_parts_plate_bool, clips_dict, pipette)
+
         ### Transfers
 
         # transfer master mix into destination wells
             # added blowout into destination wells ('blowout_location' only works for API 2.8 and above)
         pipette.pick_up_tip()
-        pipette.distribute(MASTER_MIX_VOLUME, master_mix, destination_wells, blow_out=True, blowout_location='source well', new_tip='never')
+        pipette.transfer(MASTER_MIX_VOLUME, master_mix, destination_wells, blow_out=True, blowout_location='destination well', new_tip='never')
         pipette.drop_tip()
 
         # transfer water into destination wells
             # added blowout into destination wells ('blowout_location' only works for API 2.8 and above)
-        pipette.distribute(water_vols, water, destination_wells, blow_out=True, blowout_location='source well', new_tip='always')
+        pipette.transfer(water_vols, water, destination_wells, blow_out=True, blowout_location='destination well', new_tip='always')
 
         #transfer prefixes, suffixes, and parts into destination wells
             # added blowout into destination wells ('blowout_location' only works for API 2.8 and above)

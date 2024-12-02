@@ -8,7 +8,7 @@ metadata = {
 }
 
 # It is possible to run 88 assemblies with this new module. The heat block module is removed. 
-# Assembly reactions is set up on thermocycler module gen2.
+# Assembly reactions is set up on thermocycler module.
 
 
 # test dictionary can be used for simulation 3 or 88 assemblies
@@ -20,7 +20,12 @@ metadata = {
 
 # __LABWARES is expected to be redefined by "generate_ot2_script" method
 # Test dict
-# __LABWARES={"p20_single": {"id": "p20_single_gen2"}, "p300_multi": {"id": "p300_multi_gen2"}, "mag_deck": {"id": "magdeck"}, "96_tiprack_20ul": {"id": "opentrons_96_tiprack_20ul"}, "96_tiprack_300ul": {"id": "opentrons_96_tiprack_300ul"}, "24_tuberack_1500ul": {"id": "e14151500starlab_24_tuberack_1500ul"}, "96_wellplate_200ul_pcr_step_14": {"id": "4ti0960rig_96_wellplate_200ul"}, "96_wellplate_200ul_pcr_step_23": {"id": "4ti0960rig_96_wellplate_200ul"}, "agar_plate_step_4": {"id": "4ti0960rig_96_wellplate_200ul"}, "12_reservoir_21000ul": {"id": "4ti0131_12_reservoir_21000ul"}, "96_deepwellplate_2ml": {"id": "4ti0136_96_wellplate_2200ul"}}
+# __LABWARES={"p20_single": {"id": "p20_single_gen2"}, "p300_multi": {"id": "p300_multi_gen2"}, "mag_deck": {"id": "magneticModuleV1"}, "96_tiprack_20ul": {"id": "opentrons_96_tiprack_20ul"}, "96_tiprack_300ul": {"id": "opentrons_96_tiprack_300ul"}, "24_tuberack_1500ul": {"id": "e14151500starlab_24_tuberack_1500ul"}, "96_wellplate_200ul_pcr_step_14": {"id": "4ti0960rig_96_wellplate_200ul"}, "96_wellplate_200ul_pcr_step_23": {"id": "4ti0960rig_96_wellplate_200ul"}, "agar_plate_step_4": {"id": "4ti0960rig_96_wellplate_200ul"}, "12_reservoir_21000ul": {"id": "4ti0131_12_reservoir_21000ul"}, "96_deepwellplate_2ml": {"id": "4ti0136_96_wellplate_2200ul"}}
+
+final_assembly_dict={"A1": ["A7", "B7", "C7", "D7", "E7"], "B1": ["A7", "B7", "C7", "D7", "E7"], "C1": ["A7", "B7", "C7", "F7"], "D1": ["A7", "B7", "C7", "F7"]}
+tiprack_num=1
+__LABWARES={"p20_single": {"id": "p20_single_gen2"}, "p300_multi": {"id": "p300_multi_gen2"}, "mag_deck": {"id": "magneticModuleV1"}, "96_tiprack_20ul": {"id": "opentrons_96_tiprack_20ul"}, "96_tiprack_300ul": {"id": "opentrons_96_tiprack_300ul"}, "24_tuberack_1500ul": {"id": "e14151500starlab_24_tuberack_1500ul"}, "clip_source_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "clip_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "mix_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "final_assembly_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "transfo_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "transfo_plate_wo_thermo": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "agar_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "12_reservoir_21000ul": {"id": "nest_12_reservoir_15ml"}, "96_deepwellplate_2ml": {"id": "nest_96_wellplate_2ml_deep"}, "12_corning_wellplate": {"id": "corning_12_wellplate_6.9ml_flat"}}
+
 
 def run(protocol: protocol_api.ProtocolContext):
 
@@ -53,12 +58,15 @@ def run(protocol: protocol_api.ProtocolContext):
 
             # Define Labware and set temperature
             #magbead_plate = protocol.load_labware(MAG_PLATE_TYPE, MAG_PLATE_POSITION)
-            magbead_plate = protocol.load_module(module_name=__LABWARES['mag_deck']['id'], location = 'MAG_PLATE_POSITION')
+            #MAGDECK = protocol.load_module(__LABWARES['mag_deck']['id'], location= 'MAGDECK_POSITION')
+            #MAGDECK = protocol.load_module(__LABWARES['mag_deck']['id'], MAGDECK_POSITION)
+            #Magnetic module shouldn't be needed in assembly step. Purified clips are not on the magnetic module.
             tube_rack = protocol.load_labware(TUBE_RACK_TYPE, TUBE_RACK_POSITION)
             
             
-            #thermocycler module gen2
-            tc_mod = protocol.load_module(module_name="thermocyclerModuleV2")
+            #Thermocycler Module
+            #tc_mod = protocol.load_module('Thermocycler Module')
+            tc_mod = protocol.load_module(module_name="thermocyclerModuleV1")
             destination_plate = tc_mod.load_labware(DESTINATION_PLATE_TYPE)
             tc_mod.set_block_temperature(20)
 
@@ -93,7 +101,7 @@ def run(protocol: protocol_api.ProtocolContext):
 
 
 
-            #thermocycler module gen2
+            #Thermocycler Module
             tc_mod.close_lid()
             tc_mod.set_lid_temperature(105)
             tc_mod.set_block_temperature(50, hold_time_minutes=45, block_max_volume=15)

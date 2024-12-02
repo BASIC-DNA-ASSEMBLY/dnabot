@@ -13,7 +13,7 @@ import numpy as np
 # Rename to 'purification_template' and paste into 'template_ot2_scripts' folder in DNA-BOT to use
 
 metadata = {
-     'apiLevel': '2.8',
+     'apiLevel': '2.19',
      'protocolName': 'DNABOT Step 4: Transformation with thermocycler and 12 wellplate',
      'description': 'Transformation reactions using an opentrons OT-2 for BASIC assembly.'}
 
@@ -384,7 +384,6 @@ def run(protocol: protocol_api.ProtocolContext):
     assembly_plate = protocol.load_labware(ASSEMBLY_PLATE_TYPE, ASSEMBLY_PLATE_SLOT)
         # changed to protocol.load_labware for API version 2
     tc_mod = protocol.load_module(module_name="thermocyclerModuleV2")
-    #tc_mod = protocol.load_module('thermocycler module gen2')
     transformation_plate = tc_mod.load_labware(TRANSFORMATION_PLATE_TYPE)
         # changed to protocol.load_labware for API version 2
         # removed share=True, not required in API version 2

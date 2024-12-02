@@ -3,7 +3,7 @@ from opentrons import protocol_api
 # Rename to 'purification_template' and paste into 'template_ot2_scripts' folder in DNA-BOT to use
 
 metadata = {
-     'apiLevel': '2.8',
+     'apiLevel': '2.19',
      'protocolName': 'DNABOT Step 2: Purification',
      'description': 'Implements magbead purification reactions for BASIC assembly using an opentrons OT-2'}
 
@@ -122,9 +122,9 @@ def run(protocol: protocol_api.ProtocolContext):
         ### Define Labware
 
         # Magnetic Module
-        MAGDECK = protocol.load_module(__LABWARES['mag_deck']['id'], location = MAGDECK_POSITION)
-            # 'magdeck' is the gen 1 magnetic module, use 'magnetic module gen2' for the gen 2 magentic module
-                # if using gen 2 module, need to change settling time! (see comments under Constants)
+        MAGDECK = protocol.load_module(__LABWARES['mag_deck']['id'], location= MAGDECK_POSITION)
+            # 'magneticModuleV1' is the gen 1 magnetic module, use 'magneticModuleV2' for the gen 2 magentic module
+            # if using gen 2 module, need to change settling time! (see comments under Constants)
         MAGDECK.disengage()
             # disengages the magnets when it is turned on
         mag_plate = MAGDECK.load_labware(MIX_PLATE_TYPE)

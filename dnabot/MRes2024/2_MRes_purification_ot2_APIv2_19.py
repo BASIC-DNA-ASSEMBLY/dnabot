@@ -3,7 +3,7 @@ from opentrons import protocol_api
 # Rename to 'purification_template' and paste into 'template_ot2_scripts' folder in DNA-BOT to use
 
 metadata = {
-     'apiLevel': '2.8',
+     'apiLevel': '2.19',
      'protocolName': 'DNABOT Step 2: Purification',
      'description': 'Implements magbead purification reactions for BASIC assembly using an opentrons OT-2'}
 
@@ -18,6 +18,12 @@ metadata = {
 # Test dict
 # __LABWARES={"p20_single": {"id": "p20_single_gen2"}, "p300_multi": {"id": "p300_multi_gen2"}, "mag_deck": {"id": "magneticModuleV1"}, "96_tiprack_20ul": {"id": "opentrons_96_tiprack_20ul"}, "96_tiprack_300ul": {"id": "opentrons_96_tiprack_300ul"}, "24_tuberack_1500ul": {"id": "e14151500starlab_24_tuberack_1500ul"}, "96_wellplate_200ul_pcr_step_14": {"id": "4ti0960rig_96_wellplate_200ul"}, "96_wellplate_200ul_pcr_step_23": {"id": "4ti0960rig_96_wellplate_200ul"}, "agar_plate_step_4": {"id": "4ti0960rig_96_wellplate_200ul"}, "12_reservoir_21000ul": {"id": "4ti0131_12_reservoir_21000ul"}, "96_deepwellplate_2ml": {"id": "4ti0136_96_wellplate_2200ul"}}
 # __PARAMETERS={"purif_magdeck_height": {"value": 20.0}, "purif_wash_time": {"value": 0.5}, "purif_bead_ratio": {"value": 1.8}, "purif_incubation_time": {"value": 5.0}, "purif_settling_time": {"value": 2.0}, "purif_drying_time": {"value": 5.0}, "purif_elution_time": {"value": 2.0}, "transfo_incubation_temp": {"value": 4.0}, "transfo_incubation_time": {"value": 20.0}}
+
+sample_number=6
+ethanol_well='A11'
+__LABWARES={"p20_single": {"id": "p20_single_gen2"}, "p300_multi": {"id": "p300_multi_gen2"}, "mag_deck": {"id": "magneticModuleV1"}, "96_tiprack_20ul": {"id": "opentrons_96_tiprack_20ul"}, "96_tiprack_300ul": {"id": "opentrons_96_tiprack_300ul"}, "24_tuberack_1500ul": {"id": "e14151500starlab_24_tuberack_1500ul"}, "clip_source_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "clip_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "mix_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "final_assembly_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "transfo_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "transfo_plate_wo_thermo": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "agar_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "12_reservoir_21000ul": {"id": "nest_12_reservoir_15ml"}, "96_deepwellplate_2ml": {"id": "nest_96_wellplate_2ml_deep"}, "12_corning_wellplate": {"id": "corning_12_wellplate_6.9ml_flat"}}
+__PARAMETERS={"clip_keep_thermo_lid_closed": {"value": "No", "id": "No"}, "premix_linkers": {"value": "Yes", "id": "No"}, "premix_parts": {"value": "Yes", "id": "Yes"}, "linkers_volume": {"value": 20}, "parts_volume": {"value": 20}, "thermo_temp": {"value": 4}, "purif_magdeck_height": {"value": 10.8}, "purif_wash_time": {"value": 0.5}, "purif_bead_ratio": {"value": 1.8}, "purif_incubation_time": {"value": 5}, "purif_settling_time": {"value": 2}, "purif_drying_time": {"value": 5}, "purif_elution_time": {"value": 2}, "transfo_incubation_temp": {"value": 4}, "transfo_incubation_time": {"value": 20}}
+
 
 def run(protocol: protocol_api.ProtocolContext):
 # added run function for API verison 2
@@ -122,9 +128,9 @@ def run(protocol: protocol_api.ProtocolContext):
         ### Define Labware
 
         # Magnetic Module
-        MAGDECK = protocol.load_module(__LABWARES['mag_deck']['id'], location = MAGDECK_POSITION)
-            # 'magdeck' is the gen 1 magnetic module, use 'magnetic module gen2' for the gen 2 magentic module
-                # if using gen 2 module, need to change settling time! (see comments under Constants)
+        MAGDECK = protocol.load_module(__LABWARES['mag_deck']['id'], location= MAGDECK_POSITION)
+            # 'magneticModuleV1' is the gen 1 magnetic module, use 'magneticModuleV2' for the gen 2 magentic module
+            # if using gen 2 module, need to change settling time! (see comments under Constants)
         MAGDECK.disengage()
             # disengages the magnets when it is turned on
         mag_plate = MAGDECK.load_labware(MIX_PLATE_TYPE)

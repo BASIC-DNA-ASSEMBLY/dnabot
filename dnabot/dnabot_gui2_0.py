@@ -292,46 +292,80 @@ class GUI:
             anchor='w',
             font=('Arial', 12, 'bold'))
         message_3.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
-        irow += 1
-        self.param_clip_thermo_lid_closed = self.__make_parameter_entry(
-            label="Keep the thermocycler lid closed at 4°C at the end of execution? \n (1 for yes, 0 for no)",
-            parameter_id="clip_keep_thermo_lid_closed",
-            irow=irow)
-        # irow += 1
-        # self.param_premix_linkers = self.__make_parameter_entry(
-        #     label="Premix the linker plate? (TRUE or FALSE)",
-        #     parameter_id="premix_linkers",
-        #     irow=irow)
-        # irow +=1
-        # self.param_premix_parts = self.__make_parameter_entry(
-        #     label="Premix the part plate? (TRUE or FALSE)",
-        #     parameter_id="premix_parts",
-        #     irow=irow)
-        #=================================================================
-        # =================================================================
 
         irow += 1
-        premix_linkers_label = tk.Label(self.frame, text='Premix the linker plate (True OR False)?', font=('Arial', 12))
+        premix_linkers_label = tk.Label(self.frame, text='Premix the linker plate (Yes or No)?', font=('Arial', 12))
         premix_linkers_label.grid(row=irow, column=0, sticky='e')
         self.param_premix_linkers = tk.StringVar(self.frame)
-        self.param_premix_linkers.set("TRUE")
-        boolean = ["TRUE","FALSE"]
+        self.param_premix_linkers.set('Yes')
+        boolean = ['Yes','No']
         premix_l=tk.OptionMenu(self.frame, self.param_premix_linkers, *boolean)
         premix_l.grid(row=irow, column=1, sticky=tk.W)
         premix_l.config(font=GUI.__APP_FONT)
 
         irow += 1
-        premix_parts_label = tk.Label(self.frame, text='Premix the part plate (TRUE OR FALSE)?', font=('Arial', 12))
+        premix_parts_label = tk.Label(self.frame, text='Premix the part plate (Yes or No)?', font=('Arial', 12))
         premix_parts_label.grid(row=irow, column=0, sticky='e')
         self.param_premix_parts = tk.StringVar(self.frame)
-        self.param_premix_parts.set("TRUE")
-        boolean = ["TRUE","FALSE"]
+        self.param_premix_parts.set('Yes')
+        boolean = ['Yes','No']
         premix_p=tk.OptionMenu(self.frame, self.param_premix_parts, *boolean)
         premix_p.grid(row=irow, column=1, sticky=tk.W)
         premix_p.config(font=GUI.__APP_FONT)
+        
 
-        #    irow=irow)
+        #=================================================================
+        # =================================================================
+        irow += 1
+        message_3b = tk.Message(
+            self.frame,text="Minimum part and linker volumes in your plates."
+            "\nYou are advised that the recommended dead (unused) volume is 15 ul,"
+            "\nplus you should have sufficient to account for usage and "
+            "\nevaporation at a rate of 1 ul/hour."
+            "\n          These volumes will be used to adjust the pre-mix volume if used:",
+            width=600,
+            anchor='w',
+            font=('Arial', 12, 'bold'))
+        message_3b.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
+        
+        irow += 1
+        self.param_linkers_volume = self.__make_parameter_entry(
+            label="min. volume of linkers (ul)",
+            parameter_id="linkers_volume",
+            irow=irow)
+        
+        irow += 1
+        self.param_parts_volume = self.__make_parameter_entry(
+             label="min. volume of parts (ul)",
+             parameter_id="parts_volume",
+             irow=irow)
 
+        irow += 1
+        message_3c = tk.Message(
+            self.frame,
+            text="Thermocycler settings:",
+            width=600,
+            anchor='w',
+            font=('Arial', 12, 'bold'))
+        message_3c.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')       
+        
+        irow += 1
+        self.param_thermo_temp = self.__make_parameter_entry(
+             label="Temp of thermocycler block during setup",
+             parameter_id="thermo_temp",
+             irow=irow)     
+        irow += 1
+        clip_keep_thermo_lid_closed_label = tk.Label(self.frame, text='Keep the thermocycler lid closed at 4°C at the end of execution (Yes or No)?', font=('Arial', 12))
+        clip_keep_thermo_lid_closed_label.grid(row=irow, column=0, sticky='e')
+        self.param_clip_keep_thermo_lid_closed = tk.StringVar(self.frame)
+        self.param_clip_keep_thermo_lid_closed.set('Yes')
+        boolean = ['Yes','No']
+        thermo_l=tk.OptionMenu(self.frame, self.param_clip_keep_thermo_lid_closed, *boolean)
+        thermo_l.grid(row=irow, column=1, sticky=tk.W)
+        thermo_l.config(font=GUI.__APP_FONT)
+        
+  
+    
         # Sep =================================================================
         irow += 1
         self.__add_separator(irow)
@@ -495,9 +529,13 @@ class GUI:
         self.user_settings['labwares']['96_deepwellplate_2ml']['id'] = self.labware_96_deepwellplate_2ml_entry.get()
         self.user_settings['labwares']['12_corning_wellplate']['id'] = self.labware_12_corning_wellplate_entry.get()
         # Parameters for the clip reaction step
-        self.user_settings["parameters"]["clip_keep_thermo_lid_closed"]["value"] = to_numeric_value(self.param_clip_thermo_lid_closed.get())
+        
         self.user_settings["parameters"]["premix_linkers"]["id"] = self.param_premix_linkers.get()
         self.user_settings["parameters"]["premix_parts"]["id"] = self.param_premix_parts.get()
+        self.user_settings['parameters']['linkers_volume']['value'] = to_numeric_value(self.param_linkers_volume.get())
+        self.user_settings['parameters']['parts_volume']['value'] = to_numeric_value(self.param_parts_volume.get())
+        self.user_settings["parameters"]["clip_keep_thermo_lid_closed"]["id"] = self.param_clip_keep_thermo_lid_closed.get()
+        self.user_settings['parameters']['thermo_temp']['value'] = to_numeric_value(self.param_thermo_temp.get())      
         # Parameters for the purification step
         self.user_settings['parameters']['purif_magdeck_height']['value'] = to_numeric_value(self.param_purif_magdeck_height.get())
         self.user_settings['parameters']['purif_wash_time']['value'] = to_numeric_value(self.param_purif_wash_time.get())
