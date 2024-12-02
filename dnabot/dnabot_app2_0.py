@@ -117,6 +117,9 @@ def __cli():
                                             'instead of the graphical interface. '
                                             'Type "python dnabot_app.py nogui -h" for more info.')
     parser_nogui = subparsers.add_parser('nogui')
+    parser_nogui.add_argument('--robot_type',
+                              help='Robot type, OT2 or FLEX? Default:OT2',
+                              default='OT2', type=str)
     parser_nogui.add_argument('--construct_path',
                               help='File listing constructs to be implemented.',
                               required=True)
@@ -169,7 +172,8 @@ def __info_from_gui(user_settings: dict) -> dict:
         'construct_path': None,
         'sources_paths': None,
         'etoh_well': None,
-        'soc_column': None
+        'soc_column': None,
+        'robot_type': None
     }
 
     # Obtain user input
@@ -196,6 +200,7 @@ def main():
     user_settings = __get_settings_from_file(args.default_settings_file)
 
     if args.nogui:
+        robot_type = args.robot_type
         etoh_well = args.etoh_well
         soc_column = args.soc_column
         labware_settings = user_settings['labwares']
@@ -287,12 +292,15 @@ def main():
     generate_ot2_script(
         CLIP_FNAME_1,
         os.path.join(template_dir_path, CLIP_TEMP_FNAME_1),
-        clips_dict=clips_dict)
+        clips_dict=clips_dict,
+        __LABWARES=labware_settings,
+        __PARAMETERS=parameter_settings)
     generate_ot2_script(
         CLIP_FNAME_2,
         os.path.join(template_dir_path, CLIP_TEMP_FNAME_2),
         clips_dict=clips_dict,
-        __LABWARES=labware_settings)
+        __LABWARES=labware_settings,
+        __PARAMETERS=parameter_settings)
     generate_ot2_script(
         CLIP_FNAME_3,
         os.path.join(template_dir_path, CLIP_TEMP_FNAME_3),

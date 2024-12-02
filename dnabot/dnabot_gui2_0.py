@@ -109,12 +109,39 @@ class GUI:
         irow += 1
         self.__add_separator(irow)
 
+        # Robot Type  =================================================
+        irow += 1
+        message_1 = tk.Message(
+            self.frame,
+            text=(
+                "1 - From the dropdown menus select the robot that you are using \n"
+                "  OT2 or FLEX "
+                ),
+            width=600,
+            anchor='w',
+            font=('Arial', 12, 'bold'))
+        message_1.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
+
+        irow += 1
+        robot_type_label = tk.Label(self.frame, text='Robot Type', font=('Arial', 12, 'bold'))
+        robot_type_label.grid(row=irow, column=0, sticky='e')
+        self.robot_type = tk.StringVar(self.frame)
+        self.robot_type.set("OT2")
+        Robot_choice= ["OT2","FLEX"]
+        Robot_type_x=tk.OptionMenu(self.frame, self.robot_type, *Robot_choice)
+        Robot_type_x.grid(row=irow, column=1, sticky=tk.W)
+        Robot_type_x.config(font=GUI.__APP_FONT)
+
+        irow += 1
+        self.__add_separator(irow)
+        irow += 1
+        
         # Ethanol & SOC media =================================================
         irow += 1
         message_1 = tk.Message(
             self.frame,
             text=(
-                "1 - From the dropdown menus select wells/columns for \n"
+                "2 - From the dropdown menus select wells/columns for \n"
                 "  a.) Ethanol (for the purification - script 2) \n  b.) SOC media "
                 "(for the transformation - script-4)."),
             width=600,
@@ -130,7 +157,7 @@ class GUI:
         etoh_w=tk.OptionMenu(self.frame, self.etoh_well, *tuple(GUI.__TROUGH_WELLS[1:11]))
         etoh_w.grid(row=irow, column=1, sticky=tk.W)
         etoh_w.config(font=GUI.__APP_FONT)
-
+        
         irow += 1
         soc_column_label = tk.Label(self.frame, text='b.) Deep-well plate column for SOC media during transformation:', font=('Arial', 12))
         soc_column_label.grid(row=irow, column=0, sticky='e')
@@ -149,7 +176,7 @@ class GUI:
         message_2 = tk.Message(
             self.frame,
             text=(
-                "2 - Specify the labware IDs to be used. \nDefault choices are shown, leave as is to use these."),
+                "3 - Specify the labware IDs to be used. \nDefault choices are shown, leave as is to use these."),
             width=600,
             anchor='w',
             font=('Arial', 12, 'bold'))
@@ -260,7 +287,7 @@ class GUI:
         irow += 1
         message_3 = tk.Message(
             self.frame,
-            text="3 - Specify parameters for the clip reaction step.",
+            text="4 - Specify parameters for the clip reaction step.",
             width=600,
             anchor='w',
             font=('Arial', 12, 'bold'))
@@ -313,7 +340,7 @@ class GUI:
         irow += 1
         message_4 = tk.Message(
             self.frame,
-            text="4 - Specify parameters for the purification step.",
+            text="5 - Specify parameters for the purification step.",
             width=600,
             anchor='w',
             font=('Arial', 12, 'bold'))
@@ -362,7 +389,7 @@ class GUI:
         irow += 1
         message_5 = tk.Message(
             self.frame,
-            text="5 - Specify parameters for the transformation step.",
+            text="6 - Specify parameters for the transformation step.",
             width=600,
             anchor='w',
             font=('Arial', 12, 'bold'))
@@ -386,7 +413,7 @@ class GUI:
         irow += 1
         message_6 = tk.Message(
             self.frame,
-            text="6 - Select the CSV file describing constructs.",
+            text="7 - Select the CSV file describing constructs.",
             width=600,
             anchor='w',
             font=('Arial', 12, 'bold'))
@@ -404,7 +431,7 @@ class GUI:
         message_7 = tk.Message(
             self.frame,
             text=(
-                "7 - Select up to 6 csv files describing plates "
+                "8 - Select up to 6 csv files describing plates "
                 "containing BASIC parts and linkers. If all files "
                 "are not within one folder, absolute paths should "
                 "be given."),
@@ -445,7 +472,8 @@ class GUI:
         self.root.quit()
 
     def generate(self):
-        # Step 1
+        # Step 1        
+        self.user_settings['robot_type'] = self.robot_type.get()
         self.user_settings['etoh_well'] = self.etoh_well.get()
         self.user_settings['soc_column'] = self.soc_column.get()
 
