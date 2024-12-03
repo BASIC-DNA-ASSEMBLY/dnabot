@@ -12,8 +12,11 @@ labwares:
   # Modules ###############################################
   # Opentrons magnetic module (step: purification)
   mag_deck:
-    id: magneticModuleV1
-    # id: magneticModuleV1  # BRS
+    id: magneticModuleV2
+    #id: magneticModuleV1  # BRS
+    ###########
+  # mag_deck_options_list:
+  #   list: ('magdeck', 'magnetic module gen2','magneticBlockV1')
 
   # Tip racks #############################################
   # Opentrons 20μL tips rack

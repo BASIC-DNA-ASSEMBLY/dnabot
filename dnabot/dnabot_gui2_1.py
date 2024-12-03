@@ -378,6 +378,42 @@ class GUI:
             width=600,
             anchor='w',
             font=('Arial', 12, 'bold'))
+        
+        irow += 1
+        message_1 = tk.Message(
+            self.frame,
+            text=(
+                "1 - From the dropdown menus select the robot that you are using \n"
+                "  OT2 or FLEX "
+                ),
+            width=600,
+            anchor='w',
+            font=('Arial', 12, 'bold'))
+        message_1.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
+
+        irow += 1
+        mag_deck_options_label = tk.Label(self.frame, text='Magnetic module type', font=('Arial', 12, 'bold'))
+        mag_deck_options_label.grid(row=irow, column=0, sticky='e')
+        self.mag_deck = tk.StringVar(self.frame)
+        self.mag_deck.set("magdeck")
+        mag_deck_options= mag_deck_options_list
+        mag_deck_options_x=tk.OptionMenu(self.frame, self.mag_deck, *mag_deck_options)
+        mag_deck_options_x.grid(row=irow, column=1, sticky=tk.W)
+        mag_deck_options_x.config(font=GUI.__APP_FONT)
+
+        # irow += 1
+        # robot_type_label = tk.Label(self.frame, text='Robot Type', font=('Arial', 12, 'bold'))
+        # robot_type_label.grid(row=irow, column=0, sticky='e')
+        # self.robot_type = tk.StringVar(self.frame)
+        # self.robot_type.set("OT2")
+        # Robot_choice= ["OT2","FLEX"]
+        # Robot_type_x=tk.OptionMenu(self.frame, self.robot_type, *Robot_choice)
+        # Robot_type_x.grid(row=irow, column=1, sticky=tk.W)
+        # Robot_type_x.config(font=GUI.__APP_FONT)
+        # irow += 1
+        # self.__add_separator(irow)
+        # irow += 1
+        
         message_4.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
         irow += 1
         self.param_purif_magdeck_height = self.__make_parameter_entry(
@@ -515,6 +551,7 @@ class GUI:
         self.user_settings['labwares']['p20_single']['id'] = self.labware_p10_single_entry.get()
         self.user_settings['labwares']['p300_multi']['id'] = self.labware_p300_multi_entry.get()
         self.user_settings['labwares']['mag_deck']['id'] = self.labware_mag_deck_entry.get()
+        self.user_settings['labwares']['mag_deck_options_list']['list'] = self.labware_mag_deck_entry.get()
         self.user_settings['labwares']['24_tuberack_1500ul']['id'] = self.labware_24_tuberack_1500ul_entry.get()
         self.user_settings['labwares']['96_tiprack_20ul']['id'] = self.labware_96_tiprack_20ul_entry.get()
         self.user_settings['labwares']['96_tiprack_300ul']['id'] = self.labware_96_tiprack_300ul_entry.get()
