@@ -109,9 +109,7 @@ def run(protocol: protocol_api.ProtocolContext):
         tiprack_num = total_tips // 96 + (1 if total_tips % 96 > 0 else 0)
         slots = CANDIDATE_TIPRACK_SLOTS[:tiprack_num]
         tipracks = [protocol.load_labware(tiprack_type, slot) for slot in slots]
-            # changed to protocol.load_labware for API version 2
-
-
+      
         ### Loading Pipettes
 
         pipette = protocol.load_instrument(PIPETTE_TYPE, mount="left", tip_racks=tipracks)

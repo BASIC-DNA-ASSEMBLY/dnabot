@@ -113,7 +113,6 @@ def run(protocol: protocol_api.ProtocolContext):
             np.ceil(spots)
             spotting_reactions = spotting_reactions + int(np.sum(spots))
 
-
         # p20 tiprack slots
         p20_tips = transformation_reactions + spotting_reactions
         p20_tiprack_slots = p20_tips // 96 + 1 if p20_tips % 96 > 0 else p20_tips / 96

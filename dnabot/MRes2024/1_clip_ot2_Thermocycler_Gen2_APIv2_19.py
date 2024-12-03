@@ -68,14 +68,14 @@ __LABWARES={
         # self.user_settings['labwares']['96_deepwellplate_2ml']['id'] = self.labware_96_deepwellplate_2ml_entry.get()
         # self.user_settings['labwares']['12_corning_wellplate']['id'] = self.labware_12_corning_wellplate_entry.get()
 
-__PARAMETERS={
-    "clip_keep_thermo_lid_closed": {"id": "No"},
-    "premix_linkers": {"id": 'Yes'},
-    "premix_parts": {"id": 'Yes'},
-    "parts_volume": {"value": 30},
-    "linkers_volume": {"value": 20},
-    "thermo_temp": {"value": 4}
-}
+# __PARAMETERS={
+#     "clip_keep_thermo_lid_closed": {"id": "No"},
+#     "premix_linkers": {"id": 'Yes'},
+#     "premix_parts": {"id": 'Yes'},
+#     "parts_volume": {"value": 30},
+#     "linkers_volume": {"value": 20},
+#     "thermo_temp": {"value": 4}
+# }
 
 # Parameters for the clip reaction step
 # self.user_settings["parameters"]["clip_keep_thermo_lid_closed"]["value"] = to_numeric_value(self.param_clip_thermo_lid_closed.get())
