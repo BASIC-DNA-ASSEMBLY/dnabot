@@ -215,6 +215,7 @@ def main():
             output_dir = os.path.dirname(construct_path)
     else:
         user_inputs = __info_from_gui(user_settings)
+        robot_type = user_inputs['robot_type']
         etoh_well = user_inputs['etoh_well']
         soc_column = user_inputs['soc_column']
         labware_settings = user_inputs['labwares']  # update labwares IDs
@@ -295,6 +296,7 @@ def main():
     #     CLIP_FNAME_1,
     #     os.path.join(template_dir_path, CLIP_TEMP_FNAME_1),
     #     clips_dict=clips_dict,
+    #     robot_type=robot_type,
     #     __LABWARES=labware_settings,
     #     __PARAMETERS=parameter_settings)
 
@@ -302,18 +304,21 @@ def main():
         CLIP_FNAME_2,
         os.path.join(template_dir_path, CLIP_TEMP_FNAME_2),
         clips_dict=clips_dict,
+        robot_type=robot_type,
         __LABWARES=labware_settings,
         __PARAMETERS=parameter_settings)
     generate_ot2_script(
         CLIP_FNAME_3,
         os.path.join(template_dir_path, CLIP_TEMP_FNAME_3),
         clips_dict=clips_dict,
+        robot_type=robot_type,
         __LABWARES=labware_settings,
         __PARAMETERS=parameter_settings)
     generate_ot2_script(
         CLIP_FNAME_4,
         os.path.join(template_dir_path, CLIP_TEMP_FNAME_4),
         clips_dict=clips_dict,
+        robot_type=robot_type,
         __LABWARES=labware_settings,
         __PARAMETERS=parameter_settings)
        
@@ -327,6 +332,7 @@ def main():
         os.path.join(template_dir_path, MAGBEAD_TEMP_FNAME_2),
         sample_number=magbead_sample_number,
         ethanol_well=etoh_well,
+        robot_type=robot_type,
         __LABWARES=labware_settings,
         __PARAMETERS=parameter_settings)
     
@@ -339,44 +345,49 @@ def main():
         F_ASSEMBLY_FNAME_2,
         os.path.join(template_dir_path, F_ASSEMBLY_TEMP_FNAME_2),
         final_assembly_dict=final_assembly_dict,
+        robot_type=robot_type,
         tiprack_num=final_assembly_tipracks,
         __LABWARES=labware_settings)
     generate_ot2_script(
         F_ASSEMBLY_FNAME_3,
         os.path.join(template_dir_path, F_ASSEMBLY_TEMP_FNAME_3),
         final_assembly_dict=final_assembly_dict,
+        robot_type=robot_type,
         tiprack_num=final_assembly_tipracks,
         __LABWARES=labware_settings)
     generate_ot2_script(
         F_ASSEMBLY_FNAME_4,
         os.path.join(template_dir_path, F_ASSEMBLY_TEMP_FNAME_4),
         final_assembly_dict=final_assembly_dict,
+        robot_type=robot_type,
         tiprack_num=final_assembly_tipracks,
         __LABWARES=labware_settings)
     
     # generate_ot2_script(
     #     TRANSFORMATION_FNAME_1,
     #     os.path.join(template_dir_path, TRANSFORMATION_TEMP_FNAME_1),
+    #     robot_type=robot_type,
     #     spotting_tuples=spotting_tuples,
     #     soc_well=f"A{soc_column}")
     generate_ot2_script(
         TRANSFORMATION_FNAME_2,
         os.path.join(template_dir_path, TRANSFORMATION_TEMP_FNAME_2),
         spotting_tuples=spotting_tuples,
+        robot_type=robot_type,
         soc_well=f"A{soc_column}",
         __LABWARES=labware_settings,
         __PARAMETERS=parameter_settings)
     # generate_ot2_script(
     #     TRANSFORMATION_FNAME_3,
     #     os.path.join(template_dir_path, TRANSFORMATION_TEMP_FNAME_3),
-    #     spotting_tuples=spotting_tuples,
+    #     spotting_tuples=spotting_tuples,robot_type=robot_type,
     #     soc_well=f"A{soc_column}",
     #     __LABWARES=labware_settings,
     #     __PARAMETERS=parameter_settings)
     # generate_ot2_script(
     #     TRANSFORMATION_FNAME_4,
     #     os.path.join(template_dir_path, TRANSFORMATION_TEMP_FNAME_4),
-    #     spotting_tuples=spotting_tuples_12,
+    #     spotting_tuples=spotting_tuples_12,robot_type=robot_type,
     #     soc_well=f"A{soc_column}",
     #     __LABWARES=labware_settings,
     #     __PARAMETERS=parameter_settings)
@@ -384,6 +395,7 @@ def main():
         TRANSFORMATION_FNAME_5,
         os.path.join(template_dir_path, TRANSFORMATION_TEMP_FNAME_5),
         spotting_tuples=spotting_tuples_12,
+        robot_type=robot_type,
         soc_well=f"A{soc_column}",
         __LABWARES=labware_settings,
         __PARAMETERS=parameter_settings)
@@ -391,11 +403,12 @@ def main():
         TRANSFORMATION_FNAME_6,
         os.path.join(template_dir_path, TRANSFORMATION_TEMP_FNAME_6),
         spotting_tuples=spotting_tuples_12,
+        robot_type=robot_type,
         soc_well=f"A{soc_column}",
         __LABWARES=labware_settings,
         __PARAMETERS=parameter_settings)
 
-    # Write non-OT2 scripts
+    # Write information scripts
     metainfo_dir = Path().resolve() / "metainformation"
     metainfo_dir.mkdir(exist_ok=True)
     master_mix_df = generate_master_mix_df(clips_df['number'].sum())
