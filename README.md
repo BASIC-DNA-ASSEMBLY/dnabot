@@ -1,4 +1,4 @@
-# DNA-BOT
+[# DNA-BOT
 
 **Feb 2022 - DNA-BOT has now been updated to produce scripts that run on the Opentrons OT2 in APIv2.** It also incorporates options for different hardware configurations by producing multiple scripts for each of the 4 steps. The Thermocycler module can now be optionally used in the step 1 clip reactions as well as the step 4 transformations.
 In addition, different labware inputs are available through the Graphical User Interface (GUI) or Command Line Interface (CLI).
@@ -310,3 +310,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - Marko Storch for all his help with [instructions](docs/DNA_BOT_instructions_v1.0.0.pdf) and DNA-BOT manuscript.
 - Geoff Baldwin for all his help with the DNA-BOT manuscript.
+](https://github.com/hector-en/DNA-BOT-Flex-Fork.git)
