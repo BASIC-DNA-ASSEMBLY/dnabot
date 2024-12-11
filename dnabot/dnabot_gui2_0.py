@@ -127,8 +127,8 @@ class GUI:
         robot_type_label.grid(row=irow, column=0, sticky='e')
         self.robot_type = tk.StringVar(self.frame)
         self.robot_type.set("OT2")
-        Robot_choice= ["OT2","FLEX"]
-        Robot_type_x=tk.OptionMenu(self.frame, self.robot_type, *Robot_choice)
+        #Robot_choice= ["OT2","FLEX"]
+        Robot_type_x=tk.OptionMenu(self.frame, self.robot_type, 'ot2')
         Robot_type_x.grid(row=irow, column=1, sticky=tk.W)
         Robot_type_x.config(font=GUI.__APP_FONT)
 
@@ -358,9 +358,9 @@ class GUI:
         clip_keep_thermo_lid_closed_label = tk.Label(self.frame, text='Keep the thermocycler lid closed at 4°C at the end of execution (Yes or No)?', font=('Arial', 12))
         clip_keep_thermo_lid_closed_label.grid(row=irow, column=0, sticky='e')
         self.param_clip_keep_thermo_lid_closed = tk.StringVar(self.frame)
-        self.param_clip_keep_thermo_lid_closed.set('No')
-        boolean = ['Yes','No']
-        thermo_l=tk.OptionMenu(self.frame, self.param_clip_keep_thermo_lid_closed, *boolean)
+        self.param_clip_keep_thermo_lid_closed.set('NO')
+        #boolean = ['Yes','No']
+        thermo_l=tk.OptionMenu(self.frame, self.param_clip_keep_thermo_lid_closed, 'YES')
         thermo_l.grid(row=irow, column=1, sticky=tk.W)
         thermo_l.config(font=GUI.__APP_FONT)
         

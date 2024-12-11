@@ -127,15 +127,41 @@ class GUI:
         robot_type_label.grid(row=irow, column=0, sticky='e')
         self.robot_type = tk.StringVar(self.frame)
         self.robot_type.set("OT2")
-        Robot_choice= ["OT2","FLEX"]
-        Robot_type_x=tk.OptionMenu(self.frame, self.robot_type, *Robot_choice)
+        #Robot_choice= ["OT2","FLEX"]
+        Robot_type_x=tk.OptionMenu(self.frame, self.robot_type, 'OT2')
+        #Robot_type_x=tk.OptionMenu(self.frame, self.robot_type, *Robot_choice)
         Robot_type_x.grid(row=irow, column=1, sticky=tk.W)
         Robot_type_x.config(font=GUI.__APP_FONT)
 
         irow += 1
         self.__add_separator(irow)
         irow += 1
-        
+        # Hardware  =================================================
+        irow += 1
+        message_1 = tk.Message(
+            self.frame,
+            text=(
+                "1 - From the dropdown menus select the hardware that you are using."
+                 ),
+            width=600,
+            anchor='w',
+            font=('Arial', 12, 'bold'))
+        message_1.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
+
+        irow += 1
+        p20_single_label = tk.Label(self.frame, text='OT2 P20 or FLEX P50 Pipette', font=('Arial', 12, 'bold'))
+        p20_single_label.grid(row=irow, column=0, sticky='e')
+        self.p20_single = tk.StringVar(self.frame)
+        self.p20_single.set("p20_single_gen2")
+        p20_single_choice= ["p20_single_gen2","flex_1channel_50"]
+        p20_single_x=tk.OptionMenu(self.frame, self.p20_single, *p20_single_choice)
+        p20_single_x.grid(row=irow, column=1, sticky=tk.W)
+        p20_single_x.config(font=GUI.__APP_FONT)
+
+        irow += 1
+        self.__add_separator(irow)
+        irow += 1
+
         # Ethanol & SOC media =================================================
         irow += 1
         message_1 = tk.Message(
