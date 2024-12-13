@@ -2,7 +2,7 @@
 """
 Created on Thu Nov 11 14:26:07 2021
 
-@author: gbuldum11
+@author:  gbuldum11
 
 """
 
@@ -11,11 +11,14 @@ import numpy as np
 
 
 # Rename to 'purification_template' and paste into 'template_ot2_scripts' folder in DNA-BOT to use
-
+# Author: Hector Edu Nseng
 metadata = {
-     'apiLevel': '2.8',
-     'protocolName': 'DNABOT Step 4: Transformation with thermocycler and 12 wellplate',
-     'description': 'Transformation reactions using an opentrons OT-2 for BASIC assembly.'}
+     'protocolName': 'DNABOT Step 4: Transformation with thermocycler and 12 wellplate (Flex Protocol)',
+     'description': 'Transformation reactions using an opentrons Flex for BASIC assembly.'}
+requirements = {
+    'apiLevel': '2.19',
+    'robotType': 'Flex'
+}
 
 
 # Example output produced by DNA-BOT for 88 constructs, uncomment and run to test the template
@@ -23,11 +26,38 @@ metadata = {
 #soc_well='A1'
 
 
-spotting_tuples=[(('A1', 'B1', 'C1', 'D1'), ('A1', 'B1', 'C1', 'A2'), (40, 40, 40, 40))]
-robot_type='OT2'
+spotting_tuples=[(('A1', 'B1', 'C1', 'D1'), ('A1', 'B1', 'C1', 'D1'), (5, 5, 5, 5))]
 soc_well='A1'
-__LABWARES={"p20_single": {"id": "p20_single_gen2"}, "p300_multi": {"id": "p300_multi_gen2"}, "mag_deck": {"id": "magneticModuleV2"}, "96_tiprack_20ul": {"id": "opentrons_96_tiprack_20ul"}, "96_tiprack_300ul": {"id": "opentrons_96_tiprack_300ul"}, "24_tuberack_1500ul": {"id": "e14151500starlab_24_tuberack_1500ul"}, "clip_source_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "clip_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "mix_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "final_assembly_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "transfo_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "transfo_plate_wo_thermo": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "agar_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "12_reservoir_21000ul": {"id": "nest_12_reservoir_15ml"}, "96_deepwellplate_2ml": {"id": "nest_96_wellplate_2ml_deep"}, "12_corning_wellplate": {"id": "corning_12_wellplate_6.9ml_flat"}}
-__PARAMETERS={"clip_keep_thermo_lid_closed": {"value": "No", "id": "NO"}, "premix_linkers": {"value": "Yes", "id": "Yes"}, "premix_parts": {"value": "Yes", "id": "Yes"}, "linkers_volume": {"value": 20}, "parts_volume": {"value": 20}, "thermo_temp": {"value": 4}, "purif_magdeck_height": {"value": 10.8}, "purif_wash_time": {"value": 0.5}, "purif_bead_ratio": {"value": 1.8}, "purif_incubation_time": {"value": 5}, "purif_settling_time": {"value": 2}, "purif_drying_time": {"value": 5}, "purif_elution_time": {"value": 2}, "transfo_incubation_temp": {"value": 4}, "transfo_incubation_time": {"value": 20}}
+__LABWARES={"flex_1channel_50": {"id": "flex_1channel_50"}, 
+            "flex_1channel_1000": {"id": "flex_8channel_1000"}, 
+            "flex_magnetic_block": {"id": "magneticModuleV1"}, 
+            "96_tiprack_20ul": {"id": "opentrons_flex_96_tiprack_50ul"}, 
+            "96_tiprack_300ul": {"id": "opentrons_flex_96_tiprack_1000ul"}, 
+            "opentrons_24_tuberack_nest_1.5ml_snapcap": {"id": "e14151500starlab_opentrons_24_tuberack_nest_1.5ml_snapcap"},
+            "clip_source_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
+            "clip_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
+            "flex_mix_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
+            "final_assembly_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
+            "transfo_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
+            "transfo_plate_wo_thermo": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
+            "agar_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
+            "flex_12_reservoir_15ml": {"id": "nest_12_reservoir_15ml"}, 
+            "flex_deepwell_plate": {"id": "nest_96_wellplate_2ml_deep"}, 
+            "flex_agar_plate": {"id": "corning_96_wellplate_360ul_flat"}}
+__PARAMETERS={"clip_keep_thermo_lid_closed": {"value": "No", "id": "No"}, 
+              "premix_linkers": {"value": "Yes", "id": "No"}, 
+              "premix_parts": {"value": "Yes", "id": "Yes"}, 
+              "linkers_volume": {"value": 20}, "parts_volume": {"value": 20}, 
+              "thermo_temp": {"value": 4},              
+              "purif_magdeck_height": {"value": 10.8}, 
+              "purif_wash_time": {"value": 0.5}, 
+              "purif_bead_ratio": {"value": 1.8}, 
+              "purif_incubation_time": {"value": 5}, 
+              "purif_settling_time": {"value": 2}, 
+              "purif_drying_time": {"value": 5}, 
+              "purif_elution_time": {"value": 2}, 
+              "transfo_incubation_temp": {"value": 4}, 
+              "transfo_incubation_time": {"value": 20}}
 
 
 def run(protocol: protocol_api.ProtocolContext):
@@ -44,13 +74,14 @@ def run(protocol: protocol_api.ProtocolContext):
     ASSEMBLY_PLATE_SLOT = '5'
 
     TRANSFORMATION_PLATE_TYPE = __LABWARES['transfo_plate']['id']
-    SOC_PLATE_TYPE = __LABWARES['96_deepwellplate_2ml']['id']
+    SOC_PLATE_TYPE = __LABWARES['flex_deepwell_plate']['id']
     SOC_PLATE_SLOT = '4'
     #Removed the tuberack for waste to have space for more tipracts for 88 assemblies
-    #TUBE_RACK_TYPE = 'e14151500starlab_24_tuberack_1500ul'
+    #TUBE_RACK_TYPE = 'e14151500starlab_opentrons_24_tuberack_nest_1.5ml_snapcap'
     #TUBE_RACK_SLOT = '11'
     #SPOTTING_WASTE_WELL = 'A1'
-    AGAR_PLATE_TYPE = __LABWARES['12_corning_wellplate']['id']
+    AGAR_PLATE_TYPE = __LABWARES['flex_agar_plate']['id']
+    trash = protocol.load_trash_bin("A3")  # For Flex
 
 
         # custom labware made using Opentron's Labware Creator:
@@ -142,6 +173,7 @@ def run(protocol: protocol_api.ProtocolContext):
         INCUBATION_TIME = __PARAMETERS['transfo_incubation_time']['value']  # Cells and final assembly incubation time.
 
         #thermocycler module gen2
+        tc_mod.open_lid()  # Ensure lid is opened
         tc_mod.set_block_temperature(TEMP, block_max_volume=50)
         protocol.pause(f'Place the competent cells on thermocycler when temperature is {TEMP}°C and resume run')
 
@@ -195,7 +227,7 @@ def run(protocol: protocol_api.ProtocolContext):
 
         soc = soc_plate.wells(soc_well)
 
-        tc_mod.set_block_temperature(20, block_max_volume=150)
+        tc_mod.set_block_temperature(20, block_max_volume=100)
 
         # Add SOC to transformed cells
         p300_pipette.flow_rate.aspirate = SOC_ASPIRATION_RATE
@@ -204,7 +236,7 @@ def run(protocol: protocol_api.ProtocolContext):
         p300_pipette.flow_rate.aspirate = P300_DEFAULT_ASPIRATION_RATE
 
         # Incubate for 1 hour at TEMP °C
-        tc_mod.set_block_temperature(TEMP, hold_time_minutes=60, block_max_volume=150)
+        tc_mod.set_block_temperature(TEMP, hold_time_minutes=60, block_max_volume=100)
         protocol.pause('Introduce the agar plate. Resume run')
 
 
@@ -257,63 +289,39 @@ def run(protocol: protocol_api.ProtocolContext):
             """
 
             # Constants
-            DEFAULT_HEAD_SPEED = {'x': 400, 'y': 400,'z': 125, 'a': 125}
-            SPOT_HEAD_SPEED = {'x': 400, 'y': 400, 'z': 125,'a': 125 // 4}
-            DISPENSING_HEIGHT = -5
-            SAFE_HEIGHT = 7  # height avoids collision with agar tray.
+            DEFAULT_HEAD_SPEED = {'x': 400, 'y': 400, 'z': 125, 'a': 125}
+            SPOT_HEAD_SPEED = {'x': 400, 'y': 400, 'z': 31, 'a': 31}  # Reduced speed for Z-axis during spotting
+            DISPENSING_HEIGHT = -5  # Height for dispensing
+            SAFE_HEIGHT = 7  # Height avoids collision with agar tray.
+            DEFAULT_SPEED = 400  # Default pipette speed in mm/s
+            SPOT_SPEED = SPOT_HEAD_SPEED['z']  # Z-axis speed for precise spotting
+            # Ensure a tip is attached before performing any pipette operations
+            if not p20_pipette.has_tip:
+                p20_pipette.pick_up_tip()
 
-            # Spot
-            #p20_pipette.pick_up_tip() 
-            #Removed pick_up command and move it to spot_tuple function so robot uses the same tip for each transformant until reaches the desired spotting volume
-            p20_pipette.aspirate(spot_vol + dead_vol, source[0])
-            # old code:
-                # p20_pipette.aspirate(spot_vol + dead_vol, source)
-                # returned type error because 'source' was a list containing one item (the well location)
-                # source[0] takes the location out of the list
+            # Aspirate the spot volume
+            p20_pipette.aspirate(spot_vol + dead_vol, source)
 
-            p20_pipette.move_to(target[0].top(SAFE_HEIGHT))
-            p20_pipette.move_to(target[0].top(DISPENSING_HEIGHT))
-            # old code:
-                # p20_pipette.move_to(target.top(SAFE_HEIGHT))
-                # p20_pipette.move_to(target.top(DISPENSING_HEIGHT))
-                # returned attribute error because 'target' was a list containing one item (the well location)
-                # target[0] takes the location out of the list
+            # Move to safe height above the target, then to dispensing height
+            p20_pipette.move_to(target.top(SAFE_HEIGHT))
+            p20_pipette.move_to(target.top(DISPENSING_HEIGHT))
 
-            p20_pipette.dispense(volume=spot_vol, rate=spotting_dispense_rate)
+            # Dispense the specified volume
+            p20_pipette.dispense(volume=spot_vol)
 
-            protocol.max_speeds.update(SPOT_HEAD_SPEED)
-            # old code:
-                # robot.head_speed(combined_speed=max(SPOT_HEAD_SPEED.values()), **SPOT_HEAD_SPEED)
-                # robot.head_speed not used in API version 2
-                # replaced with protocol.max_speeds
-            # new code no longer uses the lower value between combined speed or specified speed
-                # just uses each axis' specified speed directly
-            p20_pipette.move_to(target[0].top(-1 * stabbing_depth))
-            # old code:
-                # p20_pipette.move_to(target.top(-1*stabbing_depth))
-                # returns attribute error because 'target' was a list containing one item (the well location)
-            protocol.max_speeds.update(DEFAULT_HEAD_SPEED)
-            # old code:
-                # robot.head_speed(combined_speed=max(DEFAULT_HEAD_SPEED.values()), **DEFAULT_HEAD_SPEED)
-                # robot.head_speed not used in API version 2
-                # replaced with protocol.max_speeds
-            # new code no longer uses the lower value between combined speed or specified speed
-                # just uses each axis' specified speed directly
-            # the code below makes sure that the transformend cells are efficiently reaching to the agar surface
-
-            p20_pipette.move_to(target[0].top(DISPENSING_HEIGHT))
-
+            # Blow out at the dispensing height
+            p20_pipette.move_to(target.top(DISPENSING_HEIGHT))
             p20_pipette.blow_out()
 
-            p20_pipette.move_to(target[0].top(SAFE_HEIGHT))
-            # old code:
+            # Return to the safe height
+            p20_pipette.move_to(target.top(SAFE_HEIGHT))            # old code:
                 # p20_pipette.move_to(target[0].top(SAFE_HEIGHT))
                 # returns attribute error because 'target' was a list containing one item (the well location)
 
                 # the simple .blow_out command blows out at current position (spotting waste) by defualt
                 # unlike blowout=true in complex commands, which by default will blow out in waste
 
-            #p20_pipette.drop_tip()
+            #p20_pipette.drop_tip(trash)
             #Removed drop_tip command and move it to spot_tuple function so robot uses the same tip for each transformant until reaches the desired spotting volume
 
         #Each set of 12 transformants(A1-D2, E2-H3,..) will be spotted in a few rounds (20 microl + 20 microl...). Once the spotting of one column is finished, introduce the new plate and continue.
@@ -327,27 +335,52 @@ def run(protocol: protocol_api.ProtocolContext):
             Each unique source well is resuspended once prior to spotting.
 
             """
-            source_wells = spotting_tuple[0]
-            target_wells = spotting_tuple[1]
             spot_vols = list(spotting_tuple[2])
+            source_wells = spotting_tuple[0]
+            target_wells = spotting_tuple[1]            
+            #source_well = transformation_plate.wells_by_name()  # Correct reference to a single well
+            #target_well = agar_plate.wells_by_name()["B1"]  # Correct reference to a single well
+            #spot(source=source_wells, target=target_wells, spot_vol=10)
             
+
+            
+            # Process each spot volume
             while max(spot_vols) > 0:
-                #p20_pipette.pick_up_tip()
                 for index, spot_vol in enumerate(spot_vols):
-                    spot_times = spot_vols[index]/max_spot_vol
-                    p20_pipette.pick_up_tip()
-                    for i in range(int(spot_times)):
-                        if spot_vol == 0:
-                            pass
-                        else:
-                            vol = spot_vol if spot_vol <= max_spot_vol else max_spot_vol
-                            spot(source = transformation_plate.wells(source_wells[index]), target = agar_plate.wells(target_wells[index]), spot_vol = vol)
-                            spot_vols[index] = spot_vols[index] - vol*spot_times
+                    # Skip if no volume left for the current well
+                    if spot_vol <= 0:
+                        continue
+
+                    # Pick up a new tip for the current source well (reuse for all spots from this source)
+                    if not p20_pipette.has_tip:
+                        p20_pipette.pick_up_tip()
+
+                    # Calculate the remaining volume to be spotted
+                    spot_remaining = spot_vol
+                    while spot_remaining > 0:
+                        # Determine the volume to dispense in this iteration
+                        vol = min(spot_remaining, max_spot_vol)
+
+                        # Perform the spot
+                        spot(
+                            source=transformation_plate.wells_by_name()[source_wells[index]],#transformation_plate.wells(source_wells[index]),
+                            target=agar_plate.wells_by_name()[target_wells[index]],#agar_plate.wells(target_wells[index]),
+                            spot_vol=vol,
+                        )
+
+                        # Update the remaining volume
+                        spot_remaining -= vol
+
+                    # Set the volume to zero after processing
+                    spot_vols[index] = 0
+
+                    # Handle plate transition if a specific target well is reached
+                    if target_wells[index] == "C4":
+                        protocol.pause("Introduce new well plate. Resume run.")
+
+                # Drop the tip after completing all spots for the current iteration
+                if p20_pipette.has_tip:
                     p20_pipette.drop_tip()
-                    if target_wells[index] == 'C4':
-                        protocol.pause('Introduce new well plate. Resume run.')  
-                    else:
-                        continue                    
 
         # Constants
         TRANSFORMATION_MIX_SETTINGS = [4, 50]
@@ -370,7 +403,7 @@ def run(protocol: protocol_api.ProtocolContext):
             for col in unique_cols:
                 p300_pipette.pick_up_tip()
                 p300_pipette.mix(TRANSFORMATION_MIX_SETTINGS[0], TRANSFORMATION_MIX_SETTINGS[1],transformation_plate.columns_by_name()[col][0])
-                p300_pipette.drop_tip()
+                p300_pipette.drop_tip(trash)
             spot_tuple(spotting_tuple)
 
     # Tiprack slots
@@ -383,15 +416,14 @@ def run(protocol: protocol_api.ProtocolContext):
         # changed to protocol.load_labware for API version 2
     p300_tipracks = [protocol.load_labware(P300_TIPRACK_TYPE, slot) for slot in p300_slots]
         # changed to protocol.load_labware for API version 2
-    p20_pipette = protocol.load_instrument(__LABWARES['p20_single']['id'], P20_MOUNT, tip_racks=p20_tipracks)
+    p20_pipette = protocol.load_instrument(__LABWARES['flex_1channel_50']['id'], P20_MOUNT, tip_racks=p20_tipracks)
         # changed to protocol.load_instrument for API version 2
-    p300_pipette = protocol.load_instrument(__LABWARES['p300_multi']['id'], P300_MOUNT, tip_racks=p300_tipracks)
+    p300_pipette = protocol.load_instrument(__LABWARES['flex_1channel_1000']['id'], P300_MOUNT, tip_racks=p300_tipracks)
         # changed to protocol.load_instrument for API version 2
 
     assembly_plate = protocol.load_labware(ASSEMBLY_PLATE_TYPE, ASSEMBLY_PLATE_SLOT)
         # changed to protocol.load_labware for API version 2
     tc_mod = protocol.load_module(module_name="thermocyclerModuleV2")
-    #tc_mod = protocol.load_module('thermocycler module gen2')
     transformation_plate = tc_mod.load_labware(TRANSFORMATION_PLATE_TYPE)
         # changed to protocol.load_labware for API version 2
         # removed share=True, not required in API version 2
@@ -426,3 +458,25 @@ def run(protocol: protocol_api.ProtocolContext):
     spot_transformations(spotting_tuples)
     
     print(unique_cols)
+    
+if __name__ == "__main__":
+    #robot_type = input("Enter robot type (Flex or OT-2): ").strip() or "Flex"
+    robot_type = "Flex"
+    from flex_simulate import FlexibleSimulate
+    # Use the custom FlexSimulate class
+    protocol = FlexibleSimulate.get_protocol_api("2.19", robot_type=robot_type)  # Ensure the correct API level is used
+
+    # Debugging: inspect protocol setup
+    print(f"Simulated robot type: {protocol.robot_type}")
+    run(protocol)  # Call the `run` function for the protocol logic
+
+if __name__ == "__main__":
+    #robot_type = input("Enter robot type (Flex or OT-2): ").strip() or "Flex"
+    robot_type = "Flex"
+    from flex_simulate import FlexibleSimulate
+    # Use the custom FlexSimulate class
+    protocol = FlexibleSimulate.get_protocol_api("2.19", robot_type=robot_type)  # Ensure the correct API level is used
+
+    # Debugging: inspect protocol setup
+    print(f"Simulated robot type: {protocol.robot_type}")
+    run(protocol)  # Call the `run` function for the protocol logic

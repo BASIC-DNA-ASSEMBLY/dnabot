@@ -1,11 +1,15 @@
 from opentrons import protocol_api
+# Author:  Hector Edu Nseng
 
 # Rename to 'purification_template' and paste into 'template_ot2_scripts' folder in DNA-BOT to use
 
 metadata = {
-     'apiLevel': '2.19',
-     'protocolName': 'DNABOT Step 2: Purification',
-     'description': 'Implements magbead purification reactions for BASIC assembly using an opentrons OT-2'}
+     'protocolName': 'DNABOT Step 2: Purification (Flex Protocol)',
+     'description': 'Implements magbead purification reactions for BASIC assembly using an opentrons Flex'}
+requirements = {
+    'apiLevel': '2.19',
+    'robotType': 'Flex'
+}
 
 
 
@@ -16,18 +20,62 @@ metadata = {
 
 # __LABWARES and __PARAMETERS are expected to be redefined by "generate_ot2_script" method
 # Test dict
-# __LABWARES={"p20_single": {"id": "p20_single_gen2"}, "p300_multi": {"id": "p300_multi_gen2"}, "mag_deck": {"id": "magneticModuleV1"}, "96_tiprack_20ul": {"id": "opentrons_96_tiprack_20ul"}, "96_tiprack_300ul": {"id": "opentrons_96_tiprack_300ul"}, "24_tuberack_1500ul": {"id": "e14151500starlab_24_tuberack_1500ul"}, "96_wellplate_200ul_pcr_step_14": {"id": "4ti0960rig_96_wellplate_200ul"}, "96_wellplate_200ul_pcr_step_23": {"id": "4ti0960rig_96_wellplate_200ul"}, "agar_plate_step_4": {"id": "4ti0960rig_96_wellplate_200ul"}, "12_reservoir_21000ul": {"id": "4ti0131_12_reservoir_21000ul"}, "96_deepwellplate_2ml": {"id": "4ti0136_96_wellplate_2200ul"}}
+# __LABWARES={"flex_1channel_50": {"id": "flex_1channel_50"}, "flex_1channel_1000": {"id": "flex_8channel_1000"}, "flex_magnetic_block": {"id": "magneticModuleV1"}, "96_tiprack_20ul": {"id": "opentrons_flex_96_tiprack_50ul"}, "96_tiprack_300ul": {"id": "opentrons_flex_96_tiprack_1000ul"}, "opentrons_24_tuberack_nest_1.5ml_snapcap": {"id": "e14151500starlab_opentrons_24_tuberack_nest_1.5ml_snapcap"}, "96_wellplate_200ul_pcr_step_14": {"id": "4ti0960rig_96_wellplate_200ul"}, "96_wellplate_200ul_pcr_step_23": {"id": "4ti0960rig_96_wellplate_200ul"}, "agar_plate_step_4": {"id": "4ti0960rig_96_wellplate_200ul"}, "flex_12_reservoir_15ml": {"id": "4ti0131_12_reservoir_21000ul"}, "flex_deepwell_plate": {"id": "4ti0136_96_wellplate_2200ul"}}
 # __PARAMETERS={"purif_magdeck_height": {"value": 20.0}, "purif_wash_time": {"value": 0.5}, "purif_bead_ratio": {"value": 1.8}, "purif_incubation_time": {"value": 5.0}, "purif_settling_time": {"value": 2.0}, "purif_drying_time": {"value": 5.0}, "purif_elution_time": {"value": 2.0}, "transfo_incubation_temp": {"value": 4.0}, "transfo_incubation_time": {"value": 20.0}}
 
 sample_number=6
 ethanol_well='A11'
-robot_type='OT2'
-__LABWARES={"p20_single": {"id": "p20_single_gen2"}, "p300_multi": {"id": "p300_multi_gen2"}, "mag_deck": {"id": "magneticModuleV2"}, "96_tiprack_20ul": {"id": "opentrons_96_tiprack_20ul"}, "96_tiprack_300ul": {"id": "opentrons_96_tiprack_300ul"}, "24_tuberack_1500ul": {"id": "e14151500starlab_24_tuberack_1500ul"}, "clip_source_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "clip_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "mix_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "final_assembly_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "transfo_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "transfo_plate_wo_thermo": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "agar_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "12_reservoir_21000ul": {"id": "nest_12_reservoir_15ml"}, "96_deepwellplate_2ml": {"id": "nest_96_wellplate_2ml_deep"}, "12_corning_wellplate": {"id": "corning_12_wellplate_6.9ml_flat"}}
-__PARAMETERS={"clip_keep_thermo_lid_closed": {"value": "No", "id": "NO"}, "premix_linkers": {"value": "Yes", "id": "Yes"}, "premix_parts": {"value": "Yes", "id": "Yes"}, "linkers_volume": {"value": 20}, "parts_volume": {"value": 20}, "thermo_temp": {"value": 4}, "purif_magdeck_height": {"value": 10.8}, "purif_wash_time": {"value": 0.5}, "purif_bead_ratio": {"value": 1.8}, "purif_incubation_time": {"value": 5}, "purif_settling_time": {"value": 2}, "purif_drying_time": {"value": 5}, "purif_elution_time": {"value": 2}, "transfo_incubation_temp": {"value": 4}, "transfo_incubation_time": {"value": 20}}
+__LABWARES={"flex_1channel_50": {"id": "flex_1channel_50"}, 
+            "flex_1channel_1000": {"id": "flex_8channel_1000"}, 
+            "flex_magnetic_block": {"id": "magneticBlockV1"}, 
+            "96_tiprack_20ul": {"id": "opentrons_flex_96_tiprack_50ul"}, 
+            "96_tiprack_300ul": {"id": "opentrons_flex_96_tiprack_1000ul"}, 
+            "opentrons_24_tuberack_nest_1.5ml_snapcap": {"id": "e14151500starlab_opentrons_24_tuberack_nest_1.5ml_snapcap"}, 
+            "clip_source_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
+            "clip_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
+            "flex_mix_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
+            "final_assembly_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
+            "transfo_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
+            "transfo_plate_wo_thermo": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
+            "flex_agar_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
+            "flex_12_reservoir_15ml": {"id": "nest_12_reservoir_15ml"}, 
+            "flex_deepwell_plate": {"id": "nest_96_wellplate_2ml_deep"}, 
+            "12_corning_wellplate": {"id": "corning_96_wellplate_360ul_flat"}}
+__PARAMETERS={"clip_keep_thermo_lid_closed": {"value": "No", "id": "No"}, 
+              "premix_linkers": {"value": "Yes", "id": "No"}, 
+              "premix_parts": {"value": "Yes", "id": "Yes"}, 
+              "linkers_volume": {"value": 20}, "parts_volume": {"value": 20}, 
+              "thermo_temp": {"value": 4}, 
+              "purif_magdeck_height": {"value": 10.8}, 
+              "purif_wash_time": {"value": 0.5}, 
+              "purif_bead_ratio": {"value": 1.8}, 
+              "purif_incubation_time": {"value": 5}, 
+              "purif_settling_time": {"value": 2}, 
+              "purif_drying_time": {"value": 5}, 
+              "purif_elution_time": {"value": 2}, 
+              "transfo_incubation_temp": {"value": 4}, 
+              "transfo_incubation_time": {"value": 20}}
+
 
 
 def run(protocol: protocol_api.ProtocolContext):
 # added run function for API verison 2
+    trash = protocol.load_trash_bin("A3") 
+    # updates 
+    MAGNETIC_BLOCK_SLOT = "B3"  # Slot for the Magnetic Block
+    MIXING_PLATE_SLOT = "2"     # Initial slot of the mixing plate
+    LIQUID_WASTE_SLOT = "A3"    # Slot for the liquid waste
+    #MAGBLOCK = protocol.load_labware(__LABWARES['flex_magnetic_block']['id'], MAGNETIC_BLOCK_SLOT)
+    def move_with_gripper(protocol, labware, source_slot, target_slot):
+        """
+        Moves labware using the gripper from source_slot to target_slot.
+        """
+        protocol.comment(f"Moving {labware.name} from slot {source_slot} to slot {target_slot}.")
+        # Ensure the target slot is not already occupied
+        if target_slot in protocol.loaded_labwares:
+            raise ValueError(f"Target slot {target_slot} is already occupied.")
+        protocol.move_labware(labware, target_slot)
+
 
     def magbead(
             sample_number,
@@ -64,7 +112,7 @@ def run(protocol: protocol_api.ProtocolContext):
         PIPETTE_ASPIRATE_RATE = 25
         PIPETTE_DISPENSE_RATE = 150
         TIPS_PER_SAMPLE = 9
-        PIPETTE_TYPE = __LABWARES['p300_multi']['id']
+        PIPETTE_TYPE = __LABWARES['flex_1channel_1000']['id']
             # new constant for easier swapping between pipette types
 
         # Tiprack
@@ -74,17 +122,17 @@ def run(protocol: protocol_api.ProtocolContext):
         MAGDECK_POSITION = '1'
 
         # Mix Plate
-        MIX_PLATE_TYPE = __LABWARES['mix_plate']['id']
+        MIX_PLATE_TYPE = __LABWARES['flex_mix_plate']['id']
             # modified from custom labware as API 2 doesn't support labware.create anymore, so the old add_labware script can't be used
             # also acts as the type of plate loaded onto the magnetic module
         MIX_PLATE_POSITION = '4'
 
         # Reagents
-        REAGENT_CONTAINER_TYPE = __LABWARES['12_reservoir_21000ul']['id']
+        REAGENT_CONTAINER_TYPE = __LABWARES['flex_12_reservoir_15ml']['id']
         REAGENT_CONTAINER_POSITION = '7'
 
         # Beads
-        BEAD_CONTAINER_TYPE = __LABWARES['96_deepwellplate_2ml']['id']
+        BEAD_CONTAINER_TYPE = __LABWARES['flex_deepwell_plate']['id']
         BEAD_CONTAINER_POSITION = '8'
 
         # Settings
@@ -103,7 +151,6 @@ def run(protocol: protocol_api.ProtocolContext):
         ELUTANT_SEP_TIME = 1
         ELUTION_DEAD_VOL = 2
 
-
         ### Errors
         if sample_number > 48:
             raise ValueError('sample number cannot exceed 48')
@@ -116,26 +163,28 @@ def run(protocol: protocol_api.ProtocolContext):
         tiprack_num = total_tips // 96 + (1 if total_tips % 96 > 0 else 0)
         slots = CANDIDATE_TIPRACK_SLOTS[:tiprack_num]
         tipracks = [protocol.load_labware(tiprack_type, slot) for slot in slots]
-      
+            # changed to protocol.load_labware for API version 2
+
+
         ### Loading Pipettes
 
         pipette = protocol.load_instrument(PIPETTE_TYPE, mount="left", tip_racks=tipracks)
         pipette.aspirate_flow_rate=PIPETTE_ASPIRATE_RATE
         pipette.dispense_flow_rate=PIPETTE_DISPENSE_RATE
-            # for reference: default aspirate/dispense flow rate for p300_multi_gen2 is 94 ul/s
+            # for reference: default aspirate/dispense flow rate for flex_8channel_1000 is 94 ul/s
 
         ### Define Labware
 
         # Magnetic Module
-        MAGDECK = protocol.load_module(__LABWARES['mag_deck']['id'], location= MAGDECK_POSITION)
+        MAGDECK = protocol.load_module(__LABWARES['flex_magnetic_block']['id'], location= MAGDECK_POSITION)
             # 'magneticModuleV1' is the gen 1 magnetic module, use 'magneticModuleV2' for the gen 2 magentic module
             # if using gen 2 module, need to change settling time! (see comments under Constants)
-        MAGDECK.disengage()
+        # Disengage Magnetic Block using Gripper Logic
             # disengages the magnets when it is turned on
         mag_plate = MAGDECK.load_labware(MIX_PLATE_TYPE)
 
         # Mix Plate
-        mix_plate = protocol.load_labware(MIX_PLATE_TYPE, MIX_PLATE_POSITION)
+        flex_mix_plate = protocol.load_labware(MIX_PLATE_TYPE, MIX_PLATE_POSITION)
 
         # Reagents
         reagent_container = protocol.load_labware(REAGENT_CONTAINER_TYPE, REAGENT_CONTAINER_POSITION)
@@ -154,7 +203,7 @@ def run(protocol: protocol_api.ProtocolContext):
         samples = [col for col in mag_plate.columns()[sample_offset : col_num + sample_offset]]
 
         # Columns to mix beads and samples in location 4 (mix plate)
-        mixing = [col for col in mix_plate.columns()[sample_offset:col_num + sample_offset]]
+        mixing = [col for col in flex_mix_plate.columns()[sample_offset:col_num + sample_offset]]
 
         # Columns to dispense output in location 1 (magnetic module)
             # purified parts are dispensed 6 rows to the right of their initial location
@@ -183,24 +232,35 @@ def run(protocol: protocol_api.ProtocolContext):
         # Mix beads and parts
         for target in range(int(len(samples))):
 
+            # Define constants for movement speeds
+            DEFAULT_SPEED = 400  # Default speed for general operations (mm/s)
+            SLOW_SPEED = 50      # Slower speed for precise operations (mm/s)
+            pipette.default_speed = DEFAULT_SPEED
+            
             # Aspirate beads
             pipette.pick_up_tip()
             pipette.aspirate(bead_volume, beads)
-            protocol.max_speeds.update(SLOW_HEAD_SPEEDS)
+            # Perform slow movements for precise aspirate operations
+            pipette.move_to(samples[target][0].top(), speed=SLOW_SPEED)
+
+            #protocol.max_speeds.update(SLOW_HEAD_SPEEDS)
 
             # Aspirte samples
             pipette.aspirate(sample_volume + DEAD_TOTAL_VOL, samples[target][0])
 
-            # Transfer and mix on mix_plate
+            # Transfer and mix on flex_mix_plate
             pipette.dispense(total_vol, mixing[target][0])
                 # similar to above, added [0] because samples[target] returned a list of every well in column 1 rather than just one well
             pipette.mix(IMMOBILISE_MIX_REPS, mix_vol, mixing[target][0])
                 # similar to above, added [0] because samples[target] returned a list of every well in column 1 rather than just one well
             pipette.blow_out()
+            
+            # Reset the pipette's speed to default
+            pipette.default_speed = DEFAULT_SPEED
 
             # Dispose of tip
-            protocol.max_speeds.update(DEFAULT_HEAD_SPEEDS)
-            pipette.drop_tip()
+            #protocol.max_speeds.update(DEFAULT_HEAD_SPEEDS)
+            pipette.drop_tip(trash)
 
         # Immobilise sample
         protocol.delay(minutes=incubation_time)
@@ -211,7 +271,13 @@ def run(protocol: protocol_api.ProtocolContext):
             # added blowout_location=destination well because default location of blowout is waste in API version 2
 
         # Engagae MagDeck and incubate
-        MAGDECK.engage(height=MAGDECK_HEIGHT)
+        # Engage Magnetic Block using Gripper Logic
+        protocol.comment("Engaging the Magnetic Block using the Flex Gripper.")
+        move_with_gripper(protocol, mag_plate, MIXING_PLATE_SLOT, MAGNETIC_BLOCK_SLOT)  # Move plate to Magnetic Block
+        protocol.delay(minutes=settling_time)  # Wait for beads to settle
+
+
+
         protocol.delay(minutes=settling_time)
 
         # Remove supernatant from magnetic beads
@@ -230,8 +296,12 @@ def run(protocol: protocol_api.ProtocolContext):
         # Dry at room temperature
         protocol.delay(minutes=drying_time)
 
-        # Disengage MagDeck
-        MAGDECK.disengage()
+        # Disengage Magnetic Block using Gripper Logic
+        protocol.comment("Disengaging the Magnetic Block using the Flex Gripper.")
+        move_with_gripper(protocol, mag_plate, MAGNETIC_BLOCK_SLOT, MIXING_PLATE_SLOT)  # Move plate back from Magnetic Block
+
+
+
 
         # Mix beads with elution buffer
         if elution_buffer_volume / 2 > pipette.max_volume:
@@ -245,7 +315,13 @@ def run(protocol: protocol_api.ProtocolContext):
         protocol.delay(minutes=elution_time)
 
         # Engage MagDeck (remains engaged for DNA elution)
-        MAGDECK.engage(height=MAGDECK_HEIGHT)
+        # Engage Magnetic Block using Gripper Logic
+        protocol.comment("Engaging the Magnetic Block using the Flex Gripper.")
+        move_with_gripper(protocol, mag_plate, MIXING_PLATE_SLOT, MAGNETIC_BLOCK_SLOT)  # Move plate to Magnetic Block
+        protocol.delay(minutes=settling_time)  # Wait for beads to settle
+
+
+
         protocol.delay(minutes=ELUTANT_SEP_TIME)
 
         # Transfer purified parts to a new well
@@ -253,8 +329,10 @@ def run(protocol: protocol_api.ProtocolContext):
             pipette.transfer(elution_buffer_volume - ELUTION_DEAD_VOL, target,
                              dest, blow_out=False)
 
-        # Disengage MagDeck
-        MAGDECK.disengage()
+        # Disengage Magnetic Block using Gripper Logic
+        protocol.comment("Disengaging the Magnetic Block using the Flex Gripper.")
+        move_with_gripper(protocol, mag_plate, MAGNETIC_BLOCK_SLOT, MIXING_PLATE_SLOT)  # Move plate back from Magnetic Block
 
     magbead(sample_number=sample_number, ethanol_well=ethanol_well)
     # removed elution buffer well='A1', added that to where the function is defined
+    

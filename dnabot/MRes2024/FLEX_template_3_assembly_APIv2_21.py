@@ -1,11 +1,12 @@
 from opentrons import protocol_api
 import numpy as np
 # metadata
-metadata = {
-    'apiLevel': '2.19',
-    'protocolName': 'DNABOT Step 3: Assembly with thermocycler Gen2',
-    'description': 'DNABOT Step 3: Assembly with thermocycler Gen2',
-    }
+metadata = {'protocolName': 'DNABOT Step 3: Assembly with thermocycler Gen2',}
+
+
+# requirements
+requirements = {"robotType": "Flex", "apiLevel": "2.19"}
+
 # Construct assemblies are set up on thermocycler module gen2 by combining purified clip parts.
 
 # Test dictionary can be used for simulation 3 or 88 assemblies
@@ -21,13 +22,14 @@ tiprack_num=1
 
 # __LABWARES is expected to be redefined by "generate_ot2_script" method
 # Test dict - generic labware for simulation
-__LABWARES={
-     "p20_single": {"id": "p20_single_gen2"}, 
+'''__LABWARES={
+     "p50_single": {"id": "flex_1channel_50"}, 
      #"p300_multi": {"id": "p300_multi_gen2"}, 
      #"mag_deck": {"id": "magdeck"},
      "clip_plate":{"id":"biorad_96_wellplate_200ul_pcr"},
      "final_assembly_plate":{"id":"biorad_96_wellplate_200ul_pcr"},
-     "96_tiprack_20ul": {"id": "opentrons_96_tiprack_20ul"}, 
+     #"96_tiprack_20ul": {"id": "opentrons_96_tiprack_20ul"}, 
+     "flex_96_tiprack_50ul": {"id": "opentrons_flex_96_tiprack_50ul"}, 
      #"96_tiprack_300ul": {"id": "opentrons_96_tiprack_300ul"}, 
      "24_tuberack_2000ul": {"id": "opentrons_24_tuberack_generic_2ml_screwcap"}, 
      #"96_wellplate_200ul_pcr_step_14": {"id": "biorad_96_wellplate_200ul_pcr"}, 
@@ -36,28 +38,46 @@ __LABWARES={
      #"12_reservoir_21000ul": {"id": "nest_12_reservoir_15ml"}, 
      #"96_deepwellplate_2ml": {"id": "nest_96_wellplate_2ml_deep"}
      #corning_12_wellplate_6.9ml_flat
-     }
+     }'''
 
 final_assembly_dict={"A1": ["A7", "B7", "C7", "D7", "E7"], "B1": ["A7", "B7", "C7", "D7", "E7"], "C1": ["A7", "B7", "C7", "F7"], "D1": ["A7", "B7", "C7", "F7"]}
-robot_type='OT2'
 tiprack_num=1
-__LABWARES={"p20_single": {"id": "p20_single_gen2"}, "p300_multi": {"id": "p300_multi_gen2"}, "mag_deck": {"id": "magneticModuleV2"}, "96_tiprack_20ul": {"id": "opentrons_96_tiprack_20ul"}, "96_tiprack_300ul": {"id": "opentrons_96_tiprack_300ul"}, "24_tuberack_1500ul": {"id": "e14151500starlab_24_tuberack_1500ul"}, "clip_source_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "clip_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "mix_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "final_assembly_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "transfo_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "transfo_plate_wo_thermo": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "agar_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, "12_reservoir_21000ul": {"id": "nest_12_reservoir_15ml"}, "96_deepwellplate_2ml": {"id": "nest_96_wellplate_2ml_deep"}, "12_corning_wellplate": {"id": "corning_12_wellplate_6.9ml_flat"}}
-
+__LABWARES={"p50_single": {"id": "flex_1channel_50"},
+            "p50_multi": {"id": "flex_8channel_50"}, 
+            "p1000_single": {"id": "flex_1channel_1000"}, 
+            "p1000_multi": {"id": "flex_8channel_1000"},
+            "mag_block": {"id": "magneticBlockV1"},
+            "mag_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
+            "flex_96_tiprack_50ul": {"id": "opentrons_flex_96_tiprack_50ul"}, 
+            "flex_96_tiprack_200ul": {"id": "opentrons_flex_96_tiprack_200ul"},
+            "flex_96_tiprack_1000ul": {"id": "opentrons_flex_96_tiprack_1000ul"}, 
+            "24_tuberack_1500ul": {"id": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"}, 
+            "clip_source_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"},
+            "clip_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
+            "mix_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
+            "final_assembly_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
+            "transfo_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
+            "transfo_plate_wo_thermo": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
+            "agar_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
+            "12_reservoir_21000ul": {"id": "nest_12_reservoir_15ml"}, 
+            "96_deepwellplate_2ml": {"id": "nest_96_wellplate_2ml_deep"}, 
+            "12_corning_wellplate": {"id": "corning_12_wellplate_6.9ml_flat"}}
 
 def run(protocol: protocol_api.ProtocolContext):
-
-    def final_assembly(final_assembly_dict, tiprack_num, tiprack_type=__LABWARES['96_tiprack_20ul']['id']):
+    trash = protocol.load_trash_bin(location="A3")
+    def final_assembly(final_assembly_dict, tiprack_num, tiprack_type=__LABWARES['flex_96_tiprack_50ul']['id']):
         
             # Constants, we update all the labware name in version 2
             #Tiprack
-            CANDIDATE_TIPRACK_SLOTS = ['2', '3', '5', '6', '9']
+            #CANDIDATE_TIPRACK_SLOTS = ['2', '3', '5', '6', '9']
+            CANDIDATE_TIPRACK_SLOTS = ['D2', 'D3', 'C2', 'C3', 'B3']
             PIPETTE_MOUNT = 'right'
             #Plate of sample after  purification
             CLIP_PLATE_TYPE = __LABWARES['clip_plate']['id']
-            CLIP_PLATE_POSITION = '1'
+            CLIP_PLATE_POSITION = 'D1'
             #Tuberack
-            TUBE_RACK_TYPE = __LABWARES['24_tuberack_2000ul']['id']
-            TUBE_RACK_POSITION = '4'
+            TUBE_RACK_TYPE = __LABWARES['24_tuberack_1500ul']['id']
+            TUBE_RACK_POSITION = 'C1'
             #Destination plate
             DESTINATION_PLATE_TYPE = __LABWARES['final_assembly_plate']['id']
             TOTAL_VOL = 15
@@ -71,13 +91,13 @@ def run(protocol: protocol_api.ProtocolContext):
 
             slots = CANDIDATE_TIPRACK_SLOTS[:tiprack_num]
             tipracks = [protocol.load_labware(tiprack_type, slot) for slot in slots]
-            pipette = protocol.load_instrument(__LABWARES['p20_single']['id'], PIPETTE_MOUNT, tip_racks=tipracks)
+            pipette = protocol.load_instrument(__LABWARES['p50_single']['id'], PIPETTE_MOUNT, tip_racks=tipracks)
 
             # Define Labware and set temperature
             purified_clip_plate = protocol.load_labware(CLIP_PLATE_TYPE, CLIP_PLATE_POSITION)
             tube_rack = protocol.load_labware(TUBE_RACK_TYPE, TUBE_RACK_POSITION)
                   
-            #thermocycler module gen2
+            #thermocycler module gen2 
             tc_mod = protocol.load_module(module_name="thermocyclerModuleV2")
             destination_plate = tc_mod.load_labware(DESTINATION_PLATE_TYPE)
             tc_mod.open_lid()
@@ -123,12 +143,12 @@ def run(protocol: protocol_api.ProtocolContext):
                     pipette.aspirate(PART_VOL, purified_clip_plate[value].bottom(1), rate=slow)
                     pipette.dispense(PART_VOL, destination_plate[key].bottom(2), rate=slow)
                     #mix after transfer
-                    pipette.aspirate(2, destination_plate[key].bottom(1), rate=normal)
-                    pipette.dispense(2, destination_plate[key].bottom(3), rate=high)
-                    pipette.aspirate(3, destination_plate[key].bottom(2), rate=normal)
-                    pipette.dispense(3, destination_plate[key].bottom(1), rate=normal)
-                    pipette.aspirate(4, destination_plate[key].bottom(2), rate=slow)
-                    pipette.dispense(4, destination_plate[key].bottom(3), push_out=0.5, rate=vslow)
+                    pipette.aspirate(10, destination_plate[key].bottom(1), rate=normal)
+                    pipette.dispense(10, destination_plate[key].bottom(3), rate=high)
+                    pipette.aspirate(10, destination_plate[key].bottom(2), rate=normal)
+                    pipette.dispense(10, destination_plate[key].bottom(1), rate=normal)
+                    pipette.aspirate(10, destination_plate[key].bottom(2), rate=slow)
+                    pipette.dispense(10, destination_plate[key].bottom(3), push_out=0.5, rate=vslow)
                     pipette.move_to(destination_plate[key].top(-8))
                     pipette.blow_out()
                     pipette.touch_tip(radius=0.6, v_offset=-8, speed=10)
