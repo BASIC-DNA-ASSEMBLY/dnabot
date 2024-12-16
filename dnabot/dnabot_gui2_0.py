@@ -82,7 +82,7 @@ class GUI:
     
         # The set up the GUI backbone
         self.root = root
-        self.canvas = tk.Canvas(self.root, width=650, height=840)
+        self.canvas = tk.Canvas(self.root, width=900, height=820)
         self.frame = tk.Frame(self.canvas)
         self.vsb = tk.Scrollbar(self.root, orient="vertical", command=self.canvas.yview, width=20)
         self.vsb.pack(side="right", fill="y")
@@ -102,7 +102,7 @@ class GUI:
             text=(
                 "Welcome to the dnabot App v2.0! Please follow these "
                 "instructions to create the 4 DNA-BOT scripts:"),
-            width=600, font=('Arial', 18, 'bold'))
+            width=700, font=('Arial', 18, 'bold'))
         intro.grid(row=irow, columnspan=2, padx=5, pady=15)
 
         # Sep =================================================================
@@ -117,7 +117,7 @@ class GUI:
                 "1 - From the dropdown menus select the robot that you are using \n"
                 "  OT2 or FLEX "
                 ),
-            width=600,
+            width=700,
             anchor='w',
             font=('Arial', 12, 'bold'))
         message_1.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
@@ -144,7 +144,7 @@ class GUI:
                 "2 - From the dropdown menus select wells/columns for \n"
                 "  a.) Ethanol (for the purification - script 2) \n  b.) SOC media "
                 "(for the transformation - script-4)."),
-            width=600,
+            width=700,
             anchor='w',
             font=('Arial', 12, 'bold'))
         message_1.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
@@ -177,7 +177,7 @@ class GUI:
             self.frame,
             text=(
                 "3 - Specify the labware IDs to be used. \nDefault choices are shown, leave as is to use these."),
-            width=600,
+            width=700,
             anchor='w',
             font=('Arial', 12, 'bold'))
         message_2.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
@@ -288,7 +288,7 @@ class GUI:
         message_3 = tk.Message(
             self.frame,
             text="4 - Specify parameters for the clip reaction step.",
-            width=600,
+            width=700,
             anchor='w',
             font=('Arial', 12, 'bold'))
         message_3.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
@@ -323,7 +323,7 @@ class GUI:
             "\nplus you should have sufficient to account for usage and "
             "\nevaporation at a rate of 1 ul/hour."
             "\n          These volumes will be used to adjust the pre-mix volume if used:",
-            width=600,
+            width=700,
             anchor='w',
             font=('Arial', 12, 'bold'))
         message_3b.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
@@ -344,7 +344,7 @@ class GUI:
         message_3c = tk.Message(
             self.frame,
             text="Thermocycler settings:",
-            width=600,
+            width=700,
             anchor='w',
             font=('Arial', 12, 'bold'))
         message_3c.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')       
@@ -375,7 +375,7 @@ class GUI:
         message_4 = tk.Message(
             self.frame,
             text="5 - Specify parameters for the purification step.",
-            width=600,
+            width=700,
             anchor='w',
             font=('Arial', 12, 'bold'))
         message_4.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
@@ -424,7 +424,7 @@ class GUI:
         message_5 = tk.Message(
             self.frame,
             text="6 - Specify parameters for the transformation step.",
-            width=600,
+            width=700,
             anchor='w',
             font=('Arial', 12, 'bold'))
         message_5.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
@@ -448,7 +448,7 @@ class GUI:
         message_6 = tk.Message(
             self.frame,
             text="7 - Select the CSV file describing constructs.",
-            width=600,
+            width=700,
             anchor='w',
             font=('Arial', 12, 'bold'))
         message_6.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
@@ -469,7 +469,7 @@ class GUI:
                 "containing BASIC parts and linkers. If all files "
                 "are not within one folder, absolute paths should "
                 "be given."),
-            width=600,
+            width=700,
             anchor='w',
             font=('Arial', 12, 'bold'))
         message_7.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')

@@ -1,14 +1,14 @@
-# -*- coding: utf-8 -*-
+str# -*- coding: utf-8 -*-
 """
 Created on Thu Apr 11 14:26:07 2019
 
 @authors: mh2210, gizembuldum, tduigou, geoffbaldwin
 """
-from __future__ import annotations  # Enable the "hint" feature for objects
+#line below started to throw a syntax error - no idea why
+#from __future__ import annotations  # Enable the "hint" feature for objects
 
 import os
 import sys
-
 import csv
 import argparse
 import pandas as pd
@@ -22,7 +22,7 @@ from pathlib import Path
 abs_path = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, abs_path)
 
-import dnabot_gui2_0 as gui
+import dnabot_gui2_1 as gui
 import mplates
 import slots
 

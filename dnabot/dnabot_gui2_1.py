@@ -82,9 +82,9 @@ class GUI:
     
         # The set up the GUI backbone
         self.root = root
-        self.canvas = tk.Canvas(self.root, width=650, height=840)
+        self.canvas = tk.Canvas(self.root, width=900, height=820)
         self.frame = tk.Frame(self.canvas)
-        self.vsb = tk.Scrollbar(self.root, orient="vertical", command=self.canvas.yview, width=20)
+        self.vsb = tk.Scrollbar(self.root, orient="vertical", command=self.canvas.yview, width=25)
         self.vsb.pack(side="right", fill="y")
         self.canvas.configure(yscrollcommand=self.vsb.set)
         self.canvas.pack(side="left", fill="both", expand=False)
@@ -102,7 +102,7 @@ class GUI:
             text=(
                 "Welcome to the dnabot App v2.0! Please follow these "
                 "instructions to create the 4 DNA-BOT scripts:"),
-            width=600, font=('Arial', 18, 'bold'))
+            width=850, font=('Arial', 18, 'bold'))
         intro.grid(row=irow, columnspan=2, padx=5, pady=15)
 
         # Sep =================================================================
@@ -115,10 +115,9 @@ class GUI:
         message_1 = tk.Message(
             self.frame,
             text=(
-                "1 - From the dropdown menus select the robot that you are using \n"
-                "  OT2 or FLEX "
+                "1 - From the dropdown menus select the robot that you are using: OT2 or FLEX "
                 ),
-            width=600,
+            width=850,
             anchor='w',
             font=('Arial', 12, 'bold'))
         message_1.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
@@ -128,9 +127,9 @@ class GUI:
         robot_type_label.grid(row=irow, column=0, sticky='e')
         self.robot_type = tk.StringVar(self.frame)
         self.robot_type.set("OT2")
-        #Robot_choice= ["OT2","FLEX"]
+        Robot_choice= ["OT2","FLEX"]
         Robot_type_x=tk.OptionMenu(self.frame, self.robot_type, 'OT2')
-        #Robot_type_x=tk.OptionMenu(self.frame, self.robot_type, *Robot_choice)
+        Robot_type_x=tk.OptionMenu(self.frame, self.robot_type, *Robot_choice)
         Robot_type_x.grid(row=irow, column=1, sticky=tk.W)
         Robot_type_x.config(font=GUI.__APP_FONT)
 
@@ -144,15 +143,15 @@ class GUI:
         message_1 = tk.Message(
             self.frame,
             text=(
-                "1 - From the dropdown menus select the hardware that you are using."
+                "2 - From the dropdown menus select the hardware that you are using."
                  ),
-            width=600,
+            width=850,
             anchor='w',
             font=('Arial', 12, 'bold'))
         message_1.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
 
         irow += 1
-        single_pipette_label = tk.Label(self.frame, text='OT2 P20 or FLEX P50 Pipette', font=('Arial', 12, 'bold'))
+        single_pipette_label = tk.Label(self.frame, text='Single Pipette: OT2 P20 or FLEX P50 Pipette', font=('Arial', 12))
         single_pipette_label.grid(row=irow, column=0, sticky='e')
         self.single_pipette = tk.StringVar(self.frame)
         self.single_pipette.set("p20_single_gen2")
@@ -161,44 +160,51 @@ class GUI:
         single_pipette_x.grid(row=irow, column=1, sticky=tk.W)
         single_pipette_x.config(font=GUI.__APP_FONT)
 
+        # irow += 1
+        # self.__add_separator(irow)
+        # irow += 1
+
+        irow += 1
+        multi_pipette_label = tk.Label(self.frame, text='Multi-channel Pipette: OT2 P300 or FLEX P1000 8-channel Pipette', font=('Arial', 12))
+        multi_pipette_label.grid(row=irow, column=0, sticky='e')
+        self.multi_pipette = tk.StringVar(self.frame)
+        self.multi_pipette.set("p300_multi_gen2")
+        multi_pipette_choice= ["p300_multi_gen2","flex_8channel_1000"]
+        multi_pipette_x=tk.OptionMenu(self.frame, self.multi_pipette, *multi_pipette_choice)
+        multi_pipette_x.grid(row=irow, column=1, sticky=tk.W)
+        multi_pipette_x.config(font=GUI.__APP_FONT)
+
+        # irow += 1
+        # self.__add_separator(irow)
+        # irow += 1
+
+        irow += 1
+        thermo_mod_label = tk.Label(self.frame, text='Thermocylcer Module: Gen1 or Gen2', font=('Arial', 12,))
+        thermo_mod_label.grid(row=irow, column=0, sticky='e')
+        self.thermo_mod = tk.StringVar(self.frame)
+        self.thermo_mod.set("thermocyclerModuleV2")
+        thermo_mod_choice= ["thermocyclerModuleV2","thermocyclerModuleV1"]
+        thermo_mod_x=tk.OptionMenu(self.frame, self.thermo_mod, *thermo_mod_choice)
+        thermo_mod_x.grid(row=irow, column=1, sticky=tk.W)
+        thermo_mod_x.config(font=GUI.__APP_FONT)
+
+        # irow += 1
+        # self.__add_separator(irow)
+        # irow += 1
+
+        irow += 1
+        mag_deck_label = tk.Label(self.frame, text='OT2 Magnetic Module or Flex Block', font=('Arial', 12,))
+        mag_deck_label.grid(row=irow, column=0, sticky='e')
+        self.mag_deck = tk.StringVar(self.frame)
+        self.mag_deck.set("magnetic module gen1")
+        mag_deck_choice= ["magnetic module gen1","magnetic module gen2", "magneticBlockV1"]
+        mag_deck_x=tk.OptionMenu(self.frame, self.mag_deck, *mag_deck_choice)
+        mag_deck_x.grid(row=irow, column=1, sticky=tk.W)
+        mag_deck_x.config(font=GUI.__APP_FONT)
+
         irow += 1
         self.__add_separator(irow)
         irow += 1
-
-        # Ethanol & SOC media =================================================
-        irow += 1
-        message_1 = tk.Message(
-            self.frame,
-            text=(
-                "2 - From the dropdown menus select wells/columns for \n"
-                "  a.) Ethanol (for the purification - script 2) \n  b.) SOC media "
-                "(for the transformation - script-4)."),
-            width=600,
-            anchor='w',
-            font=('Arial', 12, 'bold'))
-        message_1.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
-
-        irow += 1
-        etoh_well_label = tk.Label(self.frame, text='a.) Trough well for ethanol during purification:', font=('Arial', 12))
-        etoh_well_label.grid(row=irow, column=0, sticky='e')
-        self.etoh_well = tk.StringVar(self.frame)
-        self.etoh_well.set(GUI.__TROUGH_WELLS[10])
-        etoh_w=tk.OptionMenu(self.frame, self.etoh_well, *tuple(GUI.__TROUGH_WELLS[1:11]))
-        etoh_w.grid(row=irow, column=1, sticky=tk.W)
-        etoh_w.config(font=GUI.__APP_FONT)
-        
-        irow += 1
-        soc_column_label = tk.Label(self.frame, text='b.) Deep-well plate column for SOC media during transformation:', font=('Arial', 12))
-        soc_column_label.grid(row=irow, column=0, sticky='e')
-        self.soc_column=tk.StringVar(self.frame)
-        self.soc_column.set("1")
-        soc_w=tk.OptionMenu(self.frame, self.soc_column, *tuple(['{}'.format(x + 1) for x in range(12)]))
-        soc_w.grid(row=irow, column=1, sticky='w')
-        soc_w.config(font=GUI.__APP_FONT)
-
-        # Sep =================================================================
-        irow += 1
-        self.__add_separator(irow)
 
         # Labware IDs =========================================================
         irow += 1
@@ -206,29 +212,11 @@ class GUI:
             self.frame,
             text=(
                 "3 - Specify the labware IDs to be used. \nDefault choices are shown, leave as is to use these."),
-            width=600,
+            width=850,
             anchor='w',
             font=('Arial', 12, 'bold'))
         message_2.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
 
-        # Opentrons P20 Single-Channel Electronic Pipette
-        irow += 1
-        self.labware_single_pipette = self.__make_labware_entry(
-            label="Opentrons low volume Single-Channel Pipette",
-            labware_id='single_pipette',
-            irow=irow)
-        # Opentrons P300 8-Channel Electronic Pipette
-        irow += 1
-        self.labware_multi_pipette = self.__make_labware_entry(
-            label="Opentrons 8-Channel Pipette",
-            labware_id='multi_pipette',
-            irow=irow)
-        # Opentrons magnetic module
-        irow += 1
-        self.labware_mag_deck_entry = self.__make_labware_entry(
-            label="Opentrons magnetic module",
-            labware_id='mag_deck',
-            irow=irow)
         # Opentrons 4-in-1 tubes rack for 1.5 ml eppendorf tubes
         irow += 1
         self.labware_24_tuberack_1500ul_entry = self.__make_labware_entry(
@@ -312,12 +300,46 @@ class GUI:
         irow += 1
         self.__add_separator(irow)
 
+        # Ethanol & SOC media =================================================
+        irow += 1
+        message_1 = tk.Message(
+            self.frame,
+            text=(
+                "4 - From the dropdown menus select wells/columns for \n"
+                "  a.) Ethanol (for the purification - script 2) \n  b.) SOC media "
+                "(for the transformation - script-4)."),
+            width=850,
+            anchor='w',
+            font=('Arial', 12, 'bold'))
+        message_1.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
+
+        irow += 1
+        etoh_well_label = tk.Label(self.frame, text='a.) Trough well for ethanol during purification:', font=('Arial', 12))
+        etoh_well_label.grid(row=irow, column=0, sticky='e')
+        self.etoh_well = tk.StringVar(self.frame)
+        self.etoh_well.set(GUI.__TROUGH_WELLS[10])
+        etoh_w=tk.OptionMenu(self.frame, self.etoh_well, *tuple(GUI.__TROUGH_WELLS[1:11]))
+        etoh_w.grid(row=irow, column=1, sticky=tk.W)
+        etoh_w.config(font=GUI.__APP_FONT)
+        
+        irow += 1
+        soc_column_label = tk.Label(self.frame, text='b.) Deep-well plate column for SOC media during transformation:', font=('Arial', 12))
+        soc_column_label.grid(row=irow, column=0, sticky='e')
+        self.soc_column=tk.StringVar(self.frame)
+        self.soc_column.set("1")
+        soc_w=tk.OptionMenu(self.frame, self.soc_column, *tuple(['{}'.format(x + 1) for x in range(12)]))
+        soc_w.grid(row=irow, column=1, sticky='w')
+        soc_w.config(font=GUI.__APP_FONT)
+
+        irow += 1
+        self.__add_separator(irow)
+
         # Parameters for the clip reaction step ===============================
         irow += 1
         message_3 = tk.Message(
             self.frame,
-            text="4 - Specify parameters for the clip reaction step.",
-            width=600,
+            text="5 - Specify parameters for the clip reaction step.",
+            width=850,
             anchor='w',
             font=('Arial', 12, 'bold'))
         message_3.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
@@ -352,7 +374,7 @@ class GUI:
             "\nplus you should have sufficient to account for usage and "
             "\nevaporation at a rate of 1 ul/hour."
             "\n          These volumes will be used to adjust the pre-mix volume if used:",
-            width=600,
+            width=850,
             anchor='w',
             font=('Arial', 12, 'bold'))
         message_3b.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
@@ -373,7 +395,7 @@ class GUI:
         message_3c = tk.Message(
             self.frame,
             text="Thermocycler settings:",
-            width=600,
+            width=850,
             anchor='w',
             font=('Arial', 12, 'bold'))
         message_3c.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')       
@@ -403,75 +425,51 @@ class GUI:
         irow += 1
         message_4 = tk.Message(
             self.frame,
-            text="5 - Specify parameters for the purification step.",
-            width=600,
+            text="6 - Specify parameters for the purification step.",
+            width=850,
             anchor='w',
             font=('Arial', 12, 'bold'))
+        message_4.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')       
         
         irow += 1
         message_1 = tk.Message(
             self.frame,
             text=(
-                "1 - From the dropdown menus select the robot that you are using \n"
-                "  OT2 or FLEX "
+                "Select parameters for the magnetic module (if used) and purification"
                 ),
-            width=600,
+            width=850,
             anchor='w',
-            font=('Arial', 12, 'bold'))
+            font=('Arial', 12,))
         message_1.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
 
         irow += 1
-        mag_deck_options_label = tk.Label(self.frame, text='Magnetic module type', font=('Arial', 12, 'bold'))
-        mag_deck_options_label.grid(row=irow, column=0, sticky='e')
-        self.mag_deck = tk.StringVar(self.frame)
-        self.mag_deck.set("magdeck")
-        mag_deck_options= mag_deck_options_list
-        mag_deck_options_x=tk.OptionMenu(self.frame, self.mag_deck, *mag_deck_options)
-        mag_deck_options_x.grid(row=irow, column=1, sticky=tk.W)
-        mag_deck_options_x.config(font=GUI.__APP_FONT)
-
-        # irow += 1
-        # robot_type_label = tk.Label(self.frame, text='Robot Type', font=('Arial', 12, 'bold'))
-        # robot_type_label.grid(row=irow, column=0, sticky='e')
-        # self.robot_type = tk.StringVar(self.frame)
-        # self.robot_type.set("OT2")
-        # Robot_choice= ["OT2","FLEX"]
-        # Robot_type_x=tk.OptionMenu(self.frame, self.robot_type, *Robot_choice)
-        # Robot_type_x.grid(row=irow, column=1, sticky=tk.W)
-        # Robot_type_x.config(font=GUI.__APP_FONT)
-        # irow += 1
-        # self.__add_separator(irow)
-        # irow += 1
-        
-        message_4.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
-        irow += 1
         self.param_purif_magdeck_height = self.__make_parameter_entry(
-            label="Magnetic module height (mm)",
+            label="Height to raise magnets in magnetic module (mm) \n (ignore for Flex magnetic block)",
             parameter_id="purif_magdeck_height",
             irow=irow)
         irow += 1
         self.param_purif_wash_time = self.__make_parameter_entry(
-            label="Washing time (min)",
+            label="Mag bead washing time (min)",
             parameter_id="purif_wash_time",
             irow=irow)
         irow += 1
         self.param_purif_bead_ratio = self.__make_parameter_entry(
-            label="Bead ratio",
+            label="Mag bead ratio",
             parameter_id="purif_bead_ratio",
             irow=irow)
         irow += 1
         self.param_purif_incubation_time = self.__make_parameter_entry(
-            label="Incubation time (min)",
+            label="Mag bead incubation time (min)",
             parameter_id="purif_incubation_time",
             irow=irow)
         irow += 1
         self.param_purif_settling_time = self.__make_parameter_entry(
-            label="Settling time (min)",
+            label="Mag bead settling time (min)",
             parameter_id="purif_settling_time",
             irow=irow)
         irow += 1
         self.param_purif_drying_time = self.__make_parameter_entry(
-            label="Drying time (min)",
+            label="Mag bead drying time (min)",
             parameter_id="purif_drying_time",
             irow=irow)
         irow += 1
@@ -488,8 +486,8 @@ class GUI:
         irow += 1
         message_5 = tk.Message(
             self.frame,
-            text="6 - Specify parameters for the transformation step.",
-            width=600,
+            text="7 - Specify parameters for the transformation step.",
+            width=850,
             anchor='w',
             font=('Arial', 12, 'bold'))
         message_5.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
@@ -512,8 +510,8 @@ class GUI:
         irow += 1
         message_6 = tk.Message(
             self.frame,
-            text="7 - Select the CSV file describing constructs.",
-            width=600,
+            text="8 - Select the CSV file describing constructs.",
+            width=850,
             anchor='w',
             font=('Arial', 12, 'bold'))
         message_6.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
@@ -530,11 +528,11 @@ class GUI:
         message_7 = tk.Message(
             self.frame,
             text=(
-                "8 - Select up to 6 csv files describing plates "
+                "9 - Select up to 6 csv files describing plates "
                 "containing BASIC parts and linkers. If all files "
                 "are not within one folder, absolute paths should "
                 "be given."),
-            width=600,
+            width=850,
             anchor='w',
             font=('Arial', 12, 'bold'))
         message_7.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
