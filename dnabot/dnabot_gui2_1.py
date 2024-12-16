@@ -110,6 +110,7 @@ class GUI:
         self.__add_separator(irow)
 
         # Robot Type  =================================================
+
         irow += 1
         message_1 = tk.Message(
             self.frame,
@@ -136,6 +137,8 @@ class GUI:
         irow += 1
         self.__add_separator(irow)
         irow += 1
+       ############################################################################
+       ############################################################################
         # Hardware  =================================================
         irow += 1
         message_1 = tk.Message(
@@ -149,14 +152,14 @@ class GUI:
         message_1.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
 
         irow += 1
-        p20_single_label = tk.Label(self.frame, text='OT2 P20 or FLEX P50 Pipette', font=('Arial', 12, 'bold'))
-        p20_single_label.grid(row=irow, column=0, sticky='e')
-        self.p20_single = tk.StringVar(self.frame)
-        self.p20_single.set("p20_single_gen2")
-        p20_single_choice= ["p20_single_gen2","flex_1channel_50"]
-        p20_single_x=tk.OptionMenu(self.frame, self.p20_single, *p20_single_choice)
-        p20_single_x.grid(row=irow, column=1, sticky=tk.W)
-        p20_single_x.config(font=GUI.__APP_FONT)
+        single_pipette_label = tk.Label(self.frame, text='OT2 P20 or FLEX P50 Pipette', font=('Arial', 12, 'bold'))
+        single_pipette_label.grid(row=irow, column=0, sticky='e')
+        self.single_pipette = tk.StringVar(self.frame)
+        self.single_pipette.set("p20_single_gen2")
+        single_pipette_choice= ["p20_single_gen2","flex_1channel_50"]
+        single_pipette_x=tk.OptionMenu(self.frame, self.single_pipette, *single_pipette_choice)
+        single_pipette_x.grid(row=irow, column=1, sticky=tk.W)
+        single_pipette_x.config(font=GUI.__APP_FONT)
 
         irow += 1
         self.__add_separator(irow)
@@ -210,15 +213,15 @@ class GUI:
 
         # Opentrons P20 Single-Channel Electronic Pipette
         irow += 1
-        self.labware_p10_single_entry = self.__make_labware_entry(
-            label="Opentrons P20 Single-Channel Electronic Pipette",
-            labware_id='p20_single',
+        self.labware_single_pipette = self.__make_labware_entry(
+            label="Opentrons low volume Single-Channel Pipette",
+            labware_id='single_pipette',
             irow=irow)
         # Opentrons P300 8-Channel Electronic Pipette
         irow += 1
-        self.labware_p300_multi_entry = self.__make_labware_entry(
-            label="Opentrons P300 8-Channel Electronic Pipette",
-            labware_id='p300_multi',
+        self.labware_multi_pipette = self.__make_labware_entry(
+            label="Opentrons 8-Channel Pipette",
+            labware_id='multi_pipette',
             irow=irow)
         # Opentrons magnetic module
         irow += 1
@@ -572,12 +575,13 @@ class GUI:
         self.user_settings['robot_type'] = self.robot_type.get()
         self.user_settings['etoh_well'] = self.etoh_well.get()
         self.user_settings['soc_column'] = self.soc_column.get()
-
+        # Hardware IDs
+        self.user_settings['hardware']['single_pipette']['id'] = self.hardware_single_pipette.get()
+        self.user_settings['hardware']['multi_pipette']['id'] = self.hardware_multi_pipette.get()
+        self.user_settings['hardware']['mag_deck']['id'] = self.hardware_mag_deck_entry.get()
+        #self.user_settings['hardware']['mag_deck_options_list']['list'] = self.labware_mag_deck_entry.get()
+        
         # Labware IDs
-        self.user_settings['labwares']['p20_single']['id'] = self.labware_p10_single_entry.get()
-        self.user_settings['labwares']['p300_multi']['id'] = self.labware_p300_multi_entry.get()
-        self.user_settings['labwares']['mag_deck']['id'] = self.labware_mag_deck_entry.get()
-        self.user_settings['labwares']['mag_deck_options_list']['list'] = self.labware_mag_deck_entry.get()
         self.user_settings['labwares']['24_tuberack_1500ul']['id'] = self.labware_24_tuberack_1500ul_entry.get()
         self.user_settings['labwares']['96_tiprack_20ul']['id'] = self.labware_96_tiprack_20ul_entry.get()
         self.user_settings['labwares']['96_tiprack_300ul']['id'] = self.labware_96_tiprack_300ul_entry.get()

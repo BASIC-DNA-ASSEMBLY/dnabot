@@ -1,20 +1,31 @@
 hardware:
   # Pipettes #############################################
   # Opentrons P20 Single-Channel Electronic Pipette
-  p20_single:
+  single_pipette:
     id: p20_single_gen2
-
+    #id: flex_1channel_50 #FLEX
+  single_pipette_mount:
+    id: right
+    #id: left
   # Opentrons P300 8-Channel Electronic Pipette
-  p300_multi:
+  multi_pipette:
     id: p300_multi_gen2
+    #id: flex_8channel_50 #FLEX
+    #id: flex_8channel_1000 #FLEX
+    multi_pipette_mount:
+    id: left
+    #id: right
 
-#
+  thermocycler:
+  id: "thermocyclerModuleV2"
+  #id: "thermocyclerModuleV1"
 
   # Modules ###############################################
   # Opentrons magnetic module (step: purification)
   mag_deck:
-    id: magneticModuleV2
-    #id: magneticModuleV1  # BRS
+    id: magneticModuleV1
+    #id: magneticModuleV2  # BRS
+    #id: 'magneticBlockV1  #FLEX
     ###########
   # mag_deck_options_list:
   #   list: ('magdeck', 'magnetic module gen2','magneticBlockV1')
@@ -26,11 +37,14 @@ labwares:
   96_tiprack_20ul:
     id: opentrons_96_tiprack_20ul
     # id: tipone_3dprinted_96_tiprack_20ul  # BRS
+    #id: opentrons_flex_96_tiprack_50ul #FLEX
 
   # Opentrons 300μL tips rack
   96_tiprack_300ul:
     id: opentrons_96_tiprack_300ul
     # id: tipone_yellow_3dprinted_96_tiprack_300ul  # BRS
+    #id: opentrons_flex_96_tiprack_1000ul #FLEX
+    #id: opentrons_flex_96_tiprack_200ul #FLEX
 
   # Plates ################################################
   # Opentrons 4-in-1 tubes rack for 1.5 ml eppendorf tubes (steps: clip, assembly, transformation)

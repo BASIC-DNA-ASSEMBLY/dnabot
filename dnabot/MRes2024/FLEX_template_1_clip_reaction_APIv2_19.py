@@ -36,22 +36,13 @@ clips_dict={"prefixes_wells": ["A1", "B1", "C1", "D1", "E1", "F1"],
             "parts_plates": ["D2", "D2", "D2", "D2", "D2", "D2"], 
             "parts_vols": [1, 1, 1, 1, 1, 1], 
             "water_vols": [7.0, 7.0, 7.0, 7.0, 7.0, 7.0]}
-__HARDWARE={  
-            "thermocycler":  {id: "thermocyclerModuleV2"}
-            "single_pipette": {id: "flex_1channel_50"}
-            "single_pipette_mount":{id:"right"}
-            "multi_pipette":  {id: "flex_8channel_1000"}
-            "multi_pipette_mount":{id:"left"}
-            "mag_deck": {id:"magneticBlockV1"}
-            }
-
 __LABWARES={
             #"p20_single": {"id": "p20_single_gen2"}, 
-            #"p20_single": {"id": "flex_1channel_50"},
+            "p20_single": {"id": "flex_1channel_50"},
             #"p300_multi": {"id": "p300_multi_gen2"}, 
-            #"p300_multi": {"id": "flex_8channel_50"},  
+            "p300_multi": {"id": "flex_8channel_50"},  
             #"mag_deck": {"id": "magneticModuleV1"}, 
-            #"mag_deck": {"id": "magneticBlockV1"},
+            "mag_deck": {"id": "magneticBlockV1"},
             #"96_tiprack_20ul": {"id": "opentrons_96_tiprack_20ul"},
             "96_tiprack_20ul": {"id": "opentrons_flex_96_tiprack_50ul"}, 
             #"96_tiprack_300ul": {"id": "opentrons_96_tiprack_300ul"},
@@ -99,20 +90,19 @@ def run(protocol: protocol_api.ProtocolContext):
     tiprack_type=__LABWARES['96_tiprack_20ul']['id']
     INITIAL_TIP = 'A1'
     #CANDIDATE_TIPRACK_SLOTS = ['3', '6', '9']
-    #Does this need modifying to Flex deck assignments D3, C3, B3
+    #Does this need modifying to Flex deck assignments D3, C3,
     CANDIDATE_TIPRACK_SLOTS = ['3', '6', '9']
 
     # Pipettes - pipette instructions in a single location so redefining pipette type is simpler
-    PIPETTE_TYPE = __HARDWARE['single_pipette']['id']
-    PIPETTE_MOUNT = __HARDWARE['single_pipette_mount']['id']
+    PIPETTE_TYPE = __LABWARES['p20_single']['id']
+    PIPETTE_MOUNT = 'right'
         ### Load Pipette
         # checks if it's a P20 Single pipette
     if PIPETTE_TYPE != 'flex_1channel_50':
         print('Define labware must be changed to use', PIPETTE_TYPE)
         exit()
     #thermocycler module gen2 - turn off lid and cool plate to reduce evaporation
-    #load thermoname from HARDWARE profile in user_settings
-    tc_mod = protocol.load_module(module_name=__HARDWARE['thermocycler']['id'], location = "B1")
+    tc_mod = protocol.load_module(module_name="thermocyclerModuleV2", location = "B1")
     tc_mod.open_lid()
     tc_mod.deactivate_lid()
     tc_mod.set_block_temperature(temperature=__PARAMETERS['thermo_temp']['value']) 
