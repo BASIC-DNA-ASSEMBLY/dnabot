@@ -27,7 +27,33 @@ mag_deck
 
 labware – taken from default_settings.yaml
 	leave as is for now rather than introducing dropdown menus for all of these
-#pipettes removed – leads to key error in make_labware_entry
 
+dnabot_app2_1
+
+CLIP_TEMP_FNAME_1 etcAssign temp filenames - names of the template scripts
+
+CLIP_FNAME_1 etc - Assign final filenames - names of the output files
+
+Series of constants - not sure what all of these do e.g. CLIP_DEAD_VOL??
+
+Spotting dicts for omni-tray (96-well) and 12-well plates
+	deprecate the 96-well?
+
+Source_deck_positions - not sure what these are used for
+
+Default_Settings_File - defines default options for the command line (CL) interface and what shows up in the GUI where there isn't a drop-down box
+
+def__cli() - Command line interface, defines all parameters if not using GUI
+
+user_settings - line 162
+	reads in user settings from default_settings.yaml ?
+
+Line 291...
+Generates output scripts
+takes the output filename and the template file and writes the relevant dictionaries as well as the __HARDWARE, __LABWARES & __PARAMETERS
+
+#Write deck position info - not sure what is going on here - where is it getting the deck positions from?
+	calls the separate function slots.py
+	complicated script that defines the deck positions - would we need to modify this for Flex deck positions?
 
 
