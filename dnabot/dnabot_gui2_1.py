@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu May 30 14:35:26 2019
+Originally created on Thu May 30 14:35:26 2019 by @author: mh2210
 
-@author: mh2210, tduigou
+@author: geoffbaldwin, mh2210, tduigou
 """
 
 from __future__ import annotations  # Enable the "hint" feature for objects
@@ -585,8 +585,7 @@ class GUI:
         self.user_settings['hardware']['multi_pipette_mount']['id'] = self.hardware_multi_pipette_mount.get()
         self.user_settings['hardware']['thermocycler']['id'] = self.hardware_thermocycler.get()
         self.user_settings['hardware']['mag_deck']['id'] = self.hardware_mag_deck_entry.get()
-        #self.user_settings['hardware']['mag_deck_options_list']['list'] = self.labware_mag_deck_entry.get()
-        
+           
         # Labware IDs
         self.user_settings['labwares']['24_tuberack_1500ul']['id'] = self.labware_24_tuberack_1500ul_entry.get()
         self.user_settings['labwares']['96_tiprack_20ul']['id'] = self.labware_96_tiprack_20ul_entry.get()

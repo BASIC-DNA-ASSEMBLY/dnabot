@@ -11,7 +11,7 @@ metadata = {
 
 
 # requirements
-requirements = {"robotType": "Flex", "apiLevel": "2.19"}
+requirements = {"robotType": "Flex", "apiLevel": "2.20"}
 
 # example values produced by DNA-BOT for a single construct containing 5 parts, un-comment and run to test the template:
 #sample_number=8

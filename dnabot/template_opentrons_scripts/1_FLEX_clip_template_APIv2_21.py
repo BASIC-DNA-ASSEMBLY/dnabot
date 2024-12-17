@@ -7,23 +7,12 @@ import numpy as np
 #metadata
 metadata = {
      'protocolName': 'DNABOT Step 1: Clip Reaction with thermocycler (Flex Protocol)',
-     'description': 'Implements linker ligation reactions using an opentrons Flex, including the thermocycler module gen2.'
+     'description': 'Implements linker ligation reactions using an opentrons Flex, including the thermocycler module gen1 or gen2.'
 }
 
-requirements = {"robotType": "Flex", "apiLevel": "2.21"}
+requirements = {"robotType": "Flex", "apiLevel": "2.20"}
 
 '''
-clips_dict={"prefixes_wells": ["C1", "A1", "E1", "B2", "D2", "B2"], 
-            #"prefixes_plates": ["2", "2", "2", "2", "2", "2"], 
-            "prefixes_plates": ["D2", "D2", "D2", "D2", "D2", "D2"], 
-            "suffixes_wells": ["B1", "A2", "C2", "E2", "D1", "D1"], 
-            #"suffixes_plates": ["2", "2", "2", "2", "2", "2"], 
-            "suffixes_plates": ["D2", "D2", "D2", "D2", "D2", "D2"], 
-            "parts_wells": ["A3", "B3", "C3", "D3", "E3", "D3"], 
-            #"parts_plates": ["2", "2", "2", "2", "2", "2"], 
-            "parts_plates": ["D2", "D2", "D2", "D2", "D2", "D2"], 
-            "parts_vols": [1, 1, 1, 1, 1, 1], 
-            "water_vols": [7.0, 7.0, 7.0, 7.0, 7.0, 7.0]}
 '''
 clips_dict={"prefixes_wells": ["A1", "B1", "C1", "D1", "E1", "F1"], 
             #"prefixes_plates": ["2", "2", "2", "2", "2", "2"], 
@@ -36,13 +25,13 @@ clips_dict={"prefixes_wells": ["A1", "B1", "C1", "D1", "E1", "F1"],
             "parts_plates": ["D2", "D2", "D2", "D2", "D2", "D2"], 
             "parts_vols": [1, 1, 1, 1, 1, 1], 
             "water_vols": [7.0, 7.0, 7.0, 7.0, 7.0, 7.0]}
-__HARDWARE={  
-            "thermocycler":  {id: "thermocyclerModuleV2"}
-            "single_pipette": {id: "flex_1channel_50"}
-            "single_pipette_mount":{id:"right"}
-            "multi_pipette":  {id: "flex_8channel_1000"}
-            "multi_pipette_mount":{id:"left"}
-            "mag_deck": {id:"magneticBlockV1"}
+
+__HARDWARE={"thermocycler": {"id": "thermocyclerModuleV2"},
+            "single_pipette": {"id": "flex_1channel_50"},
+            "single_pipette_mount":{"id":"right"},
+            "multi_pipette":  {"id": "flex_8channel_1000"},
+            "multi_pipette_mount":{"id":"left"},
+            "mag_deck": {"id":"magneticBlockV1"},
             }
 
 __LABWARES={
@@ -58,9 +47,6 @@ __LABWARES={
             "96_tiprack_300ul": {"id": "opentrons_flex_96_tiprack_1000ul"}, 
             #"24_tuberack_1500ul": {"id": "e14151500starlab_24_tuberack_1500ul"}, 
             "24_tuberack_1500ul": {"id": "opentrons_24_tuberack_nest_1.5ml_snapcap"},
-            #"clip_source_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"},
-            #"clip_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"},
-            #"mix_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"},
             "final_assembly_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
             "transfo_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
             "transfo_plate_wo_thermo": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}, 
@@ -68,9 +54,12 @@ __LABWARES={
             "12_reservoir_21000ul": {"id": "nest_12_reservoir_15ml"}, 
             "96_deepwellplate_2ml": {"id": "nest_96_wellplate_2ml_deep"}, 
             "12_corning_wellplate": {"id": "corning_12_wellplate_6.9ml_flat"},
-            "clip_plate": {"id": "4ti0960rig_96_wellplate_200ul"},
-            "mix_plate": {"id": "4ti0960rig_96_wellplate_200ul"},
-            "clip_source_plate": {"id": "4ti0960rig_96_wellplate_200ul"}
+            #"clip_plate": {"id": "4ti0960rig_96_wellplate_200ul"},
+            #"mix_plate": {"id": "4ti0960rig_96_wellplate_200ul"},
+            #"clip_source_plate": {"id": "4ti0960rig_96_wellplate_200ul"}
+            "clip_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"},
+            "mix_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"},
+            "clip_source_plate": {"id": "nest_96_wellplate_100ul_pcr_full_skirt"}
             }
 __PARAMETERS={"clip_keep_thermo_lid_closed": {"value": "No", "id": "No"}, 
               "premix_linkers": {"value": "Yes", "id": "Yes"}, 
@@ -104,13 +93,15 @@ def run(protocol: protocol_api.ProtocolContext):
 
     # Pipettes - pipette instructions in a single location so redefining pipette type is simpler
     PIPETTE_TYPE = __HARDWARE['single_pipette']['id']
+    #PIPETTE_TYPE = 'flex_1channel_50'
     PIPETTE_MOUNT = __HARDWARE['single_pipette_mount']['id']
+    #Pipette_mount = 'right'
         ### Load Pipette
         # checks if it's a P20 Single pipette
     if PIPETTE_TYPE != 'flex_1channel_50':
         print('Define labware must be changed to use', PIPETTE_TYPE)
         exit()
-    #thermocycler module gen2 - turn off lid and cool plate to reduce evaporation
+    #thermocycler module - turn off lid and cool plate to reduce evaporation
     #load thermoname from HARDWARE profile in user_settings
     tc_mod = protocol.load_module(module_name=__HARDWARE['thermocycler']['id'], location = "B1")
     tc_mod.open_lid()
@@ -155,7 +146,7 @@ def run(protocol: protocol_api.ProtocolContext):
         #pipetting rates below - expressed as multiple of default 
         high = 2
         normal = 1
-        slow = 0.5
+        slow = 0.4
         vslow = 0.2
         #Linker reagent volume - specify minimum volume in linker wells
         #linker_volume=20
@@ -202,7 +193,7 @@ def run(protocol: protocol_api.ProtocolContext):
                 pipette.aspirate(linker_vol/2, source_plates[prefixes_unique[clip_num, 0]][prefixes_unique[clip_num, 1]].bottom(2), rate=normal)
                 pipette.dispense(linker_vol/2, source_plates[prefixes_unique[clip_num, 0]][prefixes_unique[clip_num, 1]].bottom(3), rate=high)
                 pipette.aspirate(linker_vol/2, source_plates[prefixes_unique[clip_num, 0]][prefixes_unique[clip_num, 1]].bottom(2), rate=normal)
-                pipette.dispense(linker_vol/2, source_plates[prefixes_unique[clip_num, 0]][prefixes_unique[clip_num, 1]].bottom(linker_vol/10), rate=slow, push_out=linker_vol/10)
+                pipette.dispense(linker_vol/2, source_plates[prefixes_unique[clip_num, 0]][prefixes_unique[clip_num, 1]].bottom(linker_vol/20), rate=slow, push_out=linker_vol/20)
                 pipette.move_to(source_plates[prefixes_unique[clip_num, 0]][prefixes_unique[clip_num, 1]].top(-5)) # move to 5mm below the top of current well
                 protocol.delay(seconds=1)
                 pipette.blow_out()
@@ -218,7 +209,7 @@ def run(protocol: protocol_api.ProtocolContext):
                 pipette.aspirate(linker_vol/2, source_plates[suffixes_unique[clip_num, 0]][suffixes_unique[clip_num, 1]].bottom(2), rate=normal)
                 pipette.dispense(linker_vol/2, source_plates[suffixes_unique[clip_num, 0]][suffixes_unique[clip_num, 1]].bottom(3), rate=high)
                 pipette.aspirate(linker_vol/2, source_plates[suffixes_unique[clip_num, 0]][suffixes_unique[clip_num, 1]].bottom(2), rate=slow)
-                pipette.dispense(linker_vol/2, source_plates[suffixes_unique[clip_num, 0]][suffixes_unique[clip_num, 1]].bottom(linker_vol/10), rate=slow, push_out=linker_vol/10)
+                pipette.dispense(linker_vol/2, source_plates[suffixes_unique[clip_num, 0]][suffixes_unique[clip_num, 1]].bottom(linker_vol/20), rate=slow, push_out=linker_vol/20)
                 pipette.move_to(source_plates[suffixes_unique[clip_num, 0]][suffixes_unique[clip_num, 1]].top(-5)) # move to 5mm below the top of current well
                 protocol.delay(seconds=1)
                 pipette.blow_out()
@@ -235,7 +226,7 @@ def run(protocol: protocol_api.ProtocolContext):
         pipette.flow_rate.blow_out = 100
         high = 2
         normal = 1
-        slow = 0.5
+        slow = 0.4
         vslow = 0.2
         #Part reagent volume - specify minimum volume in part wells at top of script
         #set maximum volume for mixing calculations as 40 as P20 pipette being used
@@ -268,7 +259,7 @@ def run(protocol: protocol_api.ProtocolContext):
                 pipette.aspirate(part_vol/2, source_plates[parts_unique[clip_num, 0]][parts_unique[clip_num, 1]].bottom(2), rate=normal)
                 pipette.dispense(part_vol/2, source_plates[parts_unique[clip_num, 0]][parts_unique[clip_num, 1]].bottom(3), rate=high)
                 pipette.aspirate(part_vol/2, source_plates[parts_unique[clip_num, 0]][parts_unique[clip_num, 1]].bottom(2), rate=slow)
-                pipette.dispense(part_vol/2, source_plates[parts_unique[clip_num, 0]][parts_unique[clip_num, 1]].bottom(part_vol/10), rate=slow, push_out=part_vol/10)
+                pipette.dispense(part_vol/2, source_plates[parts_unique[clip_num, 0]][parts_unique[clip_num, 1]].bottom(part_vol/20), rate=slow, push_out=part_vol/20)
                 pipette.move_to(source_plates[parts_unique[clip_num, 0]][parts_unique[clip_num, 1]].top(-5)) # move to 5mm below the top of current well
                 protocol.delay(seconds=1)
                 pipette.blow_out()
@@ -507,14 +498,15 @@ def run(protocol: protocol_api.ProtocolContext):
         tc_mod.deactivate_lid()
         tc_mod.open_lid()
          #output command actions in simulate
-        for line in protocol.commands(): 
+    for line in protocol.commands(): 
             print(line)
+
 if __name__ == "__main__":
     #robot_type = input("Enter robot type (Flex or OT-2): ").strip() or "Flex"
     robot_type = "Flex"
     from flex_simulate import FlexibleSimulate
     # Use the custom FlexSimulate class
-    protocol = FlexibleSimulate.get_protocol_api("2.19", robot_type=robot_type)  # Ensure the correct API level is used
+    protocol = FlexibleSimulate.get_protocol_api("2.20", robot_type=robot_type)  # Ensure the correct API level is used
 
     # Debugging: inspect protocol setup
     print(f"Simulated robot type: {protocol.robot_type}")
