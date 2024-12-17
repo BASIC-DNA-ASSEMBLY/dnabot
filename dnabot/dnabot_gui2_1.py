@@ -88,7 +88,7 @@ class GUI:
         self.vsb.pack(side="right", fill="y")
         self.canvas.configure(yscrollcommand=self.vsb.set)
         self.canvas.pack(side="left", fill="both", expand=False)
-        self.canvas.create_window((0,0), window=self.frame, anchor="nw", tags="self.frame")
+        self.canvas.create_window((10,0), window=self.frame, anchor="nw", tags="self.frame")
 
         # 
         self.root.title(GUI.__APP_TITLE)
@@ -159,10 +159,15 @@ class GUI:
         single_pipette_x=tk.OptionMenu(self.frame, self.single_pipette, *single_pipette_choice)
         single_pipette_x.grid(row=irow, column=1, sticky=tk.W)
         single_pipette_x.config(font=GUI.__APP_FONT)
-
-        # irow += 1
-        # self.__add_separator(irow)
-        # irow += 1
+        irow += 1
+        single_pipette_mount_label = tk.Label(self.frame, text='Single Pipette Mount', font=('Arial', 12))
+        single_pipette_mount_label.grid(row=irow, column=0, sticky='e')
+        self.single_pipette_mount = tk.StringVar(self.frame)
+        self.single_pipette_mount.set("right")
+        single_pipette_mount_choice= ["left","right"]
+        single_pipette_mount_x=tk.OptionMenu(self.frame, self.single_pipette_mount, *single_pipette_mount_choice)
+        single_pipette_mount_x.grid(row=irow, column=1, sticky=tk.W)
+        single_pipette_mount_x.config(font=GUI.__APP_FONT)
 
         irow += 1
         multi_pipette_label = tk.Label(self.frame, text='Multi-channel Pipette: OT2 P300 or FLEX P1000 8-channel Pipette', font=('Arial', 12))
@@ -173,24 +178,25 @@ class GUI:
         multi_pipette_x=tk.OptionMenu(self.frame, self.multi_pipette, *multi_pipette_choice)
         multi_pipette_x.grid(row=irow, column=1, sticky=tk.W)
         multi_pipette_x.config(font=GUI.__APP_FONT)
-
-        # irow += 1
-        # self.__add_separator(irow)
-        # irow += 1
+        irow += 1
+        multi_pipette_mount_label = tk.Label(self.frame, text='Multi Pipette Mount', font=('Arial', 12))
+        multi_pipette_mount_label.grid(row=irow, column=0, sticky='e')
+        self.multi_pipette_mount = tk.StringVar(self.frame)
+        self.multi_pipette_mount.set("left")
+        multi_pipette_mount_choice= ["left","right"]
+        multi_pipette_mount_x=tk.OptionMenu(self.frame, self.multi_pipette_mount, *multi_pipette_mount_choice)
+        multi_pipette_mount_x.grid(row=irow, column=1, sticky=tk.W)
+        multi_pipette_mount_x.config(font=GUI.__APP_FONT)
 
         irow += 1
-        thermo_mod_label = tk.Label(self.frame, text='Thermocylcer Module: Gen1 or Gen2', font=('Arial', 12,))
-        thermo_mod_label.grid(row=irow, column=0, sticky='e')
-        self.thermo_mod = tk.StringVar(self.frame)
-        self.thermo_mod.set("thermocyclerModuleV2")
-        thermo_mod_choice= ["thermocyclerModuleV2","thermocyclerModuleV1"]
-        thermo_mod_x=tk.OptionMenu(self.frame, self.thermo_mod, *thermo_mod_choice)
-        thermo_mod_x.grid(row=irow, column=1, sticky=tk.W)
-        thermo_mod_x.config(font=GUI.__APP_FONT)
-
-        # irow += 1
-        # self.__add_separator(irow)
-        # irow += 1
+        thermocycler_label = tk.Label(self.frame, text='Thermocylcer Module: Gen1 or Gen2', font=('Arial', 12,))
+        thermocycler_label.grid(row=irow, column=0, sticky='e')
+        self.thermocycler = tk.StringVar(self.frame)
+        self.thermocycler.set("thermocyclerModuleV2")
+        thermocycler_choice= ["thermocyclerModuleV2","thermocyclerModuleV1"]
+        thermocycler_x=tk.OptionMenu(self.frame, self.thermocycler, *thermocycler_choice)
+        thermocycler_x.grid(row=irow, column=1, sticky=tk.W)
+        thermocycler_x.config(font=GUI.__APP_FONT)
 
         irow += 1
         mag_deck_label = tk.Label(self.frame, text='OT2 Magnetic Module or Flex Block', font=('Arial', 12,))
@@ -261,15 +267,15 @@ class GUI:
             irow=irow)
         # Transformation plate (step: transformation)
         irow += 1
-        self.labware_transfo_plate_entry = self.__make_labware_entry(
+        self.labware_transform_plate_entry = self.__make_labware_entry(
             label="Transformation plate (step: transformation)",
-            labware_id='transfo_plate',
+            labware_id='transform_plate',
             irow=irow)
         # Transformation plate without thermocycler (step: transformation)
         irow += 1
-        self.labware_transfo_plate_wo_thermo_entry = self.__make_labware_entry(
+        self.labware_transform_plate_wo_thermo_entry = self.__make_labware_entry(
             label="Transformation plate without thermocycler (step: transformation)",
-            labware_id='transfo_plate_wo_thermo',
+            labware_id='transform_plate_wo_thermo',
             irow=irow)
         # Agar plate (transformation step)
         irow += 1
@@ -492,14 +498,14 @@ class GUI:
             font=('Arial', 12, 'bold'))
         message_5.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
         irow += 1
-        self.param_transfo_incubation_temp = self.__make_parameter_entry(
+        self.param_transform_incubation_temp = self.__make_parameter_entry(
             label="Incubation temperature (°C)",
-            parameter_id="transfo_incubation_temp",
+            parameter_id="transform_incubation_temp",
             irow=irow)
         irow += 1
-        self.param_transfo_incubation_time = self.__make_parameter_entry(
+        self.param_transform_incubation_time = self.__make_parameter_entry(
             label="Incubation time (min)",
-            parameter_id="transfo_incubation_time",
+            parameter_id="transform_incubation_time",
             irow=irow)
 
         # Sep =================================================================
@@ -571,11 +577,13 @@ class GUI:
     def generate(self):
         # Step 1        
         self.user_settings['robot_type'] = self.robot_type.get()
-        self.user_settings['etoh_well'] = self.etoh_well.get()
-        self.user_settings['soc_column'] = self.soc_column.get()
+
         # Hardware IDs
         self.user_settings['hardware']['single_pipette']['id'] = self.hardware_single_pipette.get()
+        self.user_settings['hardware']['single_pipette_mount']['id'] = self.hardware_single_pipette_mount.get()
         self.user_settings['hardware']['multi_pipette']['id'] = self.hardware_multi_pipette.get()
+        self.user_settings['hardware']['multi_pipette_mount']['id'] = self.hardware_multi_pipette_mount.get()
+        self.user_settings['hardware']['thermocycler']['id'] = self.hardware_thermocycler.get()
         self.user_settings['hardware']['mag_deck']['id'] = self.hardware_mag_deck_entry.get()
         #self.user_settings['hardware']['mag_deck_options_list']['list'] = self.labware_mag_deck_entry.get()
         
@@ -587,14 +595,17 @@ class GUI:
         self.user_settings['labwares']['clip_plate']['id'] = self.labware_clip_plate_entry.get()
         self.user_settings['labwares']['mix_plate']['id'] = self.labware_mix_plate_entry.get()
         self.user_settings['labwares']['final_assembly_plate']['id'] = self.labware_final_assembly_plate_entry.get()
-        self.user_settings['labwares']['transfo_plate']['id'] = self.labware_transfo_plate_entry.get()
-        self.user_settings['labwares']['transfo_plate_wo_thermo']['id'] = self.labware_transfo_plate_wo_thermo_entry.get()
+        self.user_settings['labwares']['transform_plate']['id'] = self.labware_transform_plate_entry.get()
+        #remove transformation protocol without thermocycler
+        #self.user_settings['labwares']['transform_plate_wo_thermo']['id'] = self.labware_transform_plate_wo_thermo_entry.get()
         self.user_settings['labwares']['agar_plate']['id'] = self.agar_plate_entry.get()
         self.user_settings['labwares']['12_reservoir_21000ul']['id'] = self.labware_12_reservoir_21000ul_entry.get()
         self.user_settings['labwares']['96_deepwellplate_2ml']['id'] = self.labware_96_deepwellplate_2ml_entry.get()
         self.user_settings['labwares']['12_corning_wellplate']['id'] = self.labware_12_corning_wellplate_entry.get()
-        # Parameters for the clip reaction step
-        
+        #EtOH and SOC
+        self.user_settings['etoh_well'] = self.etoh_well.get()
+        self.user_settings['soc_column'] = self.soc_column.get()
+        # Parameters for the clip reaction step        
         self.user_settings["parameters"]["premix_linkers"]["id"] = self.param_premix_linkers.get()
         self.user_settings["parameters"]["premix_parts"]["id"] = self.param_premix_parts.get()
         self.user_settings['parameters']['linkers_volume']['value'] = to_numeric_value(self.param_linkers_volume.get())
@@ -610,8 +621,8 @@ class GUI:
         self.user_settings['parameters']['purif_drying_time']['value'] = to_numeric_value(self.param_purif_drying_time.get())
         self.user_settings['parameters']['purif_elution_time']['value'] = to_numeric_value(self.param_purif_elution_time.get())
         # Parameters for the transformation step
-        self.user_settings['parameters']['transfo_incubation_temp']['value'] = to_numeric_value(self.param_transfo_incubation_temp.get())
-        self.user_settings['parameters']['transfo_incubation_time']['value'] = to_numeric_value(self.param_transfo_incubation_time.get())
+        self.user_settings['parameters']['transform_incubation_temp']['value'] = to_numeric_value(self.param_transform_incubation_temp.get())
+        self.user_settings['parameters']['transform_incubation_time']['value'] = to_numeric_value(self.param_transform_incubation_time.get())
         # Construct CSV file
         self.user_settings['construct_path'] = self.construct_file_selector.get()
         # Source CSV files
@@ -621,7 +632,7 @@ class GUI:
     def __make_labware_entry(self, label, labware_id, irow):
         labware_label = tk.Label(self.frame, text=label, font=GUI.__APP_FONT)
         labware_label.grid(row=irow, column=0, sticky='e')
-        labware_entry = tk.Entry(self.frame, width=30)
+        labware_entry = tk.Entry(self.frame, width=40)
         labware_entry.insert(0, self.user_settings["labwares"][labware_id]['id'])
         labware_entry.grid(row=irow, column=1, sticky='w')
         return labware_entry
@@ -629,7 +640,7 @@ class GUI:
     def __make_parameter_entry(self, label, parameter_id, irow, parameter_value="value"):
         parameter_label = tk.Label(self.frame, text=label, font=GUI.__APP_FONT)
         parameter_label.grid(row=irow, column=0, sticky='e')
-        parameter_entry = tk.Entry(self.frame, width=30)
+        parameter_entry = tk.Entry(self.frame, width=20)
         parameter_entry.insert(0, self.user_settings["parameters"][parameter_id][parameter_value])
         parameter_entry.grid(row=irow, column=1, sticky='w')
         return parameter_entry

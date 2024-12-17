@@ -20,15 +20,10 @@ hardware:
   id: "thermocyclerModuleV2"
   #id: "thermocyclerModuleV1"
 
-  # Modules ###############################################
-  # Opentrons magnetic module (step: purification)
   mag_deck:
     id: magneticModuleV1
     #id: magneticModuleV2  # BRS
     #id: 'magneticBlockV1  #FLEX
-    ###########
-  # mag_deck_options_list:
-  #   list: ('magdeck', 'magnetic module gen2','magneticBlockV1')
 
 labwares:
 
