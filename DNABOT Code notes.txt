@@ -1,0 +1,33 @@
+﻿DNABOT_GUI Code structure
+
+Class - FileSelector
+Functions:
+       __init__
+
+       Browse_file
+
+       Update_text
+
+       Get(self)
+
+Class – GUI
+Function __init__ #sets up the GUI
+
+Go through all user inputs required
+
+Robot type
+
+Hardware – for new __hardware parameters to be added to all scripts
+
+single_pipette
+multi_pipette
+thermo_mod
+mag_deck
+	Do we need to add these to default_settings.yaml?
+
+labware – taken from default_settings.yaml
+	leave as is for now rather than introducing dropdown menus for all of these
+#pipettes removed – leads to key error in make_labware_entry
+
+
+
