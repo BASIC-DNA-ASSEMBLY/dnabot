@@ -2,17 +2,24 @@ from opentrons import protocol_api
 #from mix_functions import mix_linkers_function, mix_parts_function
 import numpy as np
 
-# Revised commands adapt to both OT2 and Flex robots, only the header needs to be changed.
+# Revised commands adapt to both OT-2 and Flex robots, only the header needs to be changed.
 # new __HARDWARE configuration defines all of the available hardware setups
 # gripper module for Flex is currently not included - this would only impact script 3 purification.
 
-#metadata
+# #OT-2 Metadata
+# metadata = {
+#      'apiLevel': '2.20',
+#      'protocolName': 'DNABOT Step 1: Clip Reaction with thermocycler',
+#      'description': 'Implements linker ligation reactions using an opentrons OT-2, including the thermocycler module gen2.'
+# }
+
+#FLEX metadata - also has 'requirements'
 metadata = {
      'protocolName': 'DNABOT Step 1: Clip Reaction with thermocycler (Flex Protocol)',
      'description': 'Implements linker ligation reactions using an opentrons Flex, including the thermocycler module gen1 or gen2.'
 }
 
-requirements = {"robotType": "Flex", "apiLevel": "2.20"}
+requirements = {"robotType": "OT-2", "apiLevel": "2.20"}
 
 clips_dict={"prefixes_wells": ["A1", "B1", "C1", "D1", "E1", "F1"], 
             #"prefixes_plates": ["2", "2", "2", "2", "2", "2"], 
@@ -26,26 +33,28 @@ clips_dict={"prefixes_wells": ["A1", "B1", "C1", "D1", "E1", "F1"],
             "parts_vols": [1, 1, 1, 1, 1, 1], 
             "water_vols": [7.0, 7.0, 7.0, 7.0, 7.0, 7.0]}
 
-__HARDWARE={"robot_type": {"id": "Flex"},
+__HARDWARE={"robot_type": {"id": "OT-2"},
             "thermocycler": {"id": "thermocyclerModuleV2"},
-            "single_pipette": {"id": "flex_1channel_50"},
+            #"single_pipette": {"id": "flex_1channel_50"},
+            "single_pipette": {"id": "p20_single_gen2"},
             "single_pipette_mount":{"id":"right"},
-            "multi_pipette":  {"id": "flex_8channel_1000"},
+            "p300_multi": {"id": "p300_multi_gen2"}, 
+            #"multi_pipette":  {"id": "flex_8channel_1000"},
             "multi_pipette_mount":{"id":"left"},
             "mag_deck": {"id":"magneticBlockV1"},
             #"mag_deck": {"id": "magneticModuleV1"}, 
             #             
-            #"single_pipette": {"id": "p20_single_gen2"}
+
             #"p20_single": {"id": "flex_1channel_50"},
-            #"p300_multi": {"id": "p300_multi_gen2"}, 
+            
             #"p300_multi": {"id": "flex_8channel_50"},  
             }
 
 __LABWARES={
 
             #"mag_deck": {"id": "magneticBlockV1"},
-            #"96_tiprack_20ul": {"id": "opentrons_96_tiprack_20ul"},
-            "96_tiprack_20ul": {"id": "opentrons_flex_96_tiprack_50ul"}, 
+            "96_tiprack_20ul": {"id": "opentrons_96_tiprack_20ul"},
+            #"96_tiprack_20ul": {"id": "opentrons_flex_96_tiprack_50ul"}, 
             #"96_tiprack_300ul": {"id": "opentrons_96_tiprack_300ul"},
             "96_tiprack_300ul": {"id": "opentrons_flex_96_tiprack_1000ul"}, 
             #"24_tuberack_1500ul": {"id": "e14151500starlab_24_tuberack_1500ul"}, 
@@ -67,7 +76,7 @@ __LABWARES={
 __PARAMETERS={"clip_keep_thermo_lid_closed": {"value": "No", "id": "No"}, 
               "premix_linkers": {"value": "Yes", "id": "Yes"}, 
               "premix_parts": {"value": "Yes", "id": "Yes"},
-              "linkers_volume": {"value": 120}, 
+              "linkers_volume": {"value": 60}, 
               "parts_volume": {"value": 60}, 
               "thermo_temp": {"value": 4}, 
               #"purif_magdeck_height": {"value": 10.8}, 
@@ -102,12 +111,7 @@ def run(protocol: protocol_api.ProtocolContext):
     #PIPETTE_TYPE = 'flex_1channel_50'
     PIPETTE_MOUNT = __HARDWARE['single_pipette_mount']['id']
     #Pipette_mount = 'right'
-        ### Load Pipette
-        # checks if it's a P20 Single pipette - pipette and robot validation are done by Opentrons
-    # if PIPETTE_TYPE != 'flex_1channel_50':
-    #     print('Define labware must be changed to use', PIPETTE_TYPE)
-    #     exit()
-    #thermocycler module - turn off lid and cool plate to reduce evaporation
+
     #load thermoname from HARDWARE profile in user_settings
     if __HARDWARE['robot_type']['id']=='Flex':
         tc_mod = protocol.load_module(module_name=__HARDWARE['thermocycler']['id'], location = "B1")
@@ -152,7 +156,7 @@ def run(protocol: protocol_api.ProtocolContext):
                 pipette.flow_rate.aspirate = 50
                 pipette.flow_rate.dispense = 50
                 pipette.flow_rate.blow_out = 100
-        elif __HARDWARE['robot_type']['id']=='OT2':            
+        elif __HARDWARE['robot_type']['id']=='OT-2':            
             if PIPETTE_TYPE=="p20_single_gen2":
                 pipette.flow_rate.aspirate = 10
                 pipette.flow_rate.dispense = 10
@@ -166,18 +170,16 @@ def run(protocol: protocol_api.ProtocolContext):
         slow = 0.4
         vslow = 0.2
 
-        #set maximum volume for mixing calculations as 100 for Flex and 40 for OT2 so max volume of pipette is not exceeded:
+        #set maximum volume for mixing calculations as 100 for Flex and 40 for OT-2 so max volume of pipette is not exceeded:
         #maximum linker mix is set as linker_vol/2
         if __HARDWARE['robot_type']['id']=='Flex':
             if __PARAMETERS['linkers_volume']['value']>100:
                 linker_vol=100
-        elif __HARDWARE['robot_type']['id']=='OT2':
+        elif __HARDWARE['robot_type']['id']=='OT-2':
             if __PARAMETERS['linkers_volume']['value']>40:
-                linker_vol=40
-        else:
-            linker_vol=__PARAMETERS['linkers_volume']['value']
-        
-        #linker_offset=np.log(linker_vol)
+                    linker_vol=40
+            else:
+                linker_vol=__PARAMETERS['linkers_volume']['value']
 
         if Mix_linkers_bool:
             #Extracts lists from clips_dict
@@ -248,7 +250,7 @@ def run(protocol: protocol_api.ProtocolContext):
                 pipette.flow_rate.aspirate = 50
                 pipette.flow_rate.dispense = 50
                 pipette.flow_rate.blow_out = 100
-        elif __HARDWARE['robot_type']['id']=='OT2':            
+        elif __HARDWARE['robot_type']['id']=='OT-2':            
             if(PIPETTE_TYPE)=="p20_single_gen2":
                 pipette.flow_rate.aspirate = 10
                 pipette.flow_rate.dispense = 10
@@ -262,13 +264,13 @@ def run(protocol: protocol_api.ProtocolContext):
         slow = 0.4
         vslow = 0.2
         
-        #set maximum volume for mixing calculations as 100 for Flex and 40 for OT2 so max volume of pipette is not exceeded:
+        #set maximum volume for mixing calculations as 100 for Flex and 40 for OT-2 so max volume of pipette is not exceeded:
         #maximum linker mix is set as linker_vol/2
     
         if __HARDWARE['robot_type']['id']=='Flex':
             if __PARAMETERS['parts_volume']['value']>100:
                 part_vol=100
-        elif __HARDWARE['robot_type']['id']=='OT2':
+        elif __HARDWARE['robot_type']['id']=='OT-2':
             if __PARAMETERS['parts_volume']['value']>40:
                 part_vol=40
         else:
@@ -287,8 +289,6 @@ def run(protocol: protocol_api.ProtocolContext):
 
             for clip_num in range(len(parts_unique)):
                 pipette.pick_up_tip()
-                pipette.well_bottom_clearance.aspirate = 2  # tip is 2 mm above well bottom
-                pipette.well_bottom_clearance.dispense = 1  # tip is 2 mm above well bottom
                 pipette.aspirate(part_vol/2, source_plates[parts_unique[clip_num, 0]][parts_unique[clip_num, 1]].bottom(2), rate=normal)
                 pipette.dispense(part_vol/2, source_plates[parts_unique[clip_num, 0]][parts_unique[clip_num, 1]].bottom(3), rate=high)
                 pipette.aspirate(part_vol/2, source_plates[parts_unique[clip_num, 0]][parts_unique[clip_num, 1]].bottom(2), rate=normal)
@@ -404,7 +404,7 @@ def run(protocol: protocol_api.ProtocolContext):
                 pipette.flow_rate.aspirate = 50
                 pipette.flow_rate.dispense = 50
                 pipette.flow_rate.blow_out = 100
-        elif __HARDWARE['robot_type']['id']=='OT2':            
+        elif __HARDWARE['robot_type']['id']=='OT-2':            
             if(PIPETTE_TYPE)=="p20_single_gen2":
                 pipette.flow_rate.aspirate = 10
                 pipette.flow_rate.dispense = 10
@@ -419,10 +419,10 @@ def run(protocol: protocol_api.ProtocolContext):
         vslow = 0.2
         
         # get the location at the center of well A1
-        # center_location = plate["A1"].center()
+        #center_location = plate["A1"].center()
 
         # # get a location 1 mm right, 1 mm back, and 1 mm up from the center of well A1
-        # adjusted_location = center_location.move(types.Point(x=1, y=1, z=1))
+        #adjusted_location = center_location.move(types.Point(x=1, y=2, z=2))
 
         # # aspirate 1 mm right, 1 mm back, and 1 mm up from the center of well A1
         # pipette.aspirate(50, adjusted_location)
@@ -432,7 +432,7 @@ def run(protocol: protocol_api.ProtocolContext):
         
         # transfer master mix into destination wells
         pipette.well_bottom_clearance.aspirate = 1  # tip is x mm above well bottom
-        pipette.well_bottom_clearance.dispense = 0  # tip is y mm above well bottom        
+        pipette.well_bottom_clearance.dispense = 2 # tip is y mm above well bottom        
         pipette.pick_up_tip()
         pipette.distribute(MASTER_MIX_VOLUME, master_mix, destination_wells, blow_out=True, blowout_location='source well', new_tip='never', rate=slow)
         pipette.drop_tip()
@@ -551,7 +551,7 @@ def run(protocol: protocol_api.ProtocolContext):
 
 if __name__ == "__main__":
     #robot_type = input("Enter robot type (Flex or OT-2): ").strip() or "Flex"
-    robot_type = "Flex"
+    robot_type = "OT-2"
     from flex_simulate import FlexibleSimulate
     # Use the custom FlexSimulate class
     protocol = FlexibleSimulate.get_protocol_api("2.20", robot_type=robot_type)  # Ensure the correct API level is used

@@ -1,8 +1,8 @@
 str# -*- coding: utf-8 -*-
 """
-Created on Thu Apr 11 14:26:07 2019
+Originally created on Thu Apr 11 14:26:07 2019 by @author: mh2210
 
-@authors: mh2210, gizembuldum, tduigou, geoffbaldwin
+@authors: geoffbaldwin, mh2210, gizembuldum, tduigou
 """
 #line below started to throw a syntax error - no idea why
 #from __future__ import annotations  # Enable the "hint" feature for objects
@@ -27,47 +27,38 @@ import mplates
 import slots
 
 # Constant str
-TEMPLATE_DIR_NAME = 'template_ot2_scripts'
+TEMPLATE_DIR_NAME = 'template_opentrons_scripts'
 
-#CLIP_TEMP_FNAME_1 = 'clip_template_FLEX_APIv2_19.py'
-CLIP_TEMP_FNAME_2 = 'MRes_clip_template_Thermocycler_Gen2_APIv2_19.py'
-CLIP_TEMP_FNAME_3 = 'clip_template_Thermocycler_Gen2_APIv2.8.py'
-CLIP_TEMP_FNAME_4 = 'clip_template_Thermocycler_Gen2_APIv2_19.py'
+CLIP_TEMP_FNAME_1 = '1_Flex_clip_template_APIv2_21.py'
+CLIP_TEMP_FNAME_2 = '1_OT2_clip_template_APIv2_21.py'
+#CLIP_TEMP_FNAME_4 = 'clip_template_Thermocycler_Gen2_APIv2_19.py'
 
-#MAGBEAD_TEMP_FNAME_1 = 'purification_template_FLEX_APIv2_19.py'
-MAGBEAD_TEMP_FNAME_2 = 'MRes_purification_template_APIv2_19.py'
+MAGBEAD_TEMP_FNAME_1 = '2_Flex_purification_template_APIv2_21.py'
+MAGBEAD_TEMP_FNAME_2 = '2_OT2_purification_template_APIv2_21.py'
 
-#F_ASSEMBLY_TEMP_FNAME_1 = 'assembly_template_FLEX_APIv2_19.py'
-F_ASSEMBLY_TEMP_FNAME_2 = 'MRes_assembly_template_Thermocycler_Gen2_APIv2_19.py'
-F_ASSEMBLY_TEMP_FNAME_3 = 'assembly_template_Thermocycler_Gen1_APIv2.8.py'
-F_ASSEMBLY_TEMP_FNAME_4 = 'assembly_template_Thermocycler_Gen2_APIv2.8.py'
+F_ASSEMBLY_TEMP_FNAME_1 = '3_Flex_assembly_template_APIv2_21.py'
+F_ASSEMBLY_TEMP_FNAME_2 = '3_OT2_assembly_template_APIv2_21.py'
+#F_ASSEMBLY_TEMP_FNAME_3 = 'assembly_template_Thermocycler_Gen1_APIv2.8.py'
+#F_ASSEMBLY_TEMP_FNAME_4 = 'assembly_template_Thermocycler_Gen2_APIv2.8.py'
 
-#TRANSFORMATION_TEMP_FNAME_1 = 'transformation_template_FLEX_12wellplate_APIv2_19.py'
-TRANSFORMATION_TEMP_FNAME_2 = 'MRes_transformation_template_Thermocycler_Gen2_12wellplate_APIv2_19.py'
+TRANSFORMATION_TEMP_FNAME_1 = '4_Flex_transformation_template_12wellplate_APIv2_21.py'
+TRANSFORMATION_TEMP_FNAME_2 = '4_OT2_transformation_template_12wellplate_APIv2_21.py'
 #TRANSFORMATION_TEMP_FNAME_3 = 'transformation_template_Thermocycler_Gen1_APIv2.8.py'
 #TRANSFORMATION_TEMP_FNAME_4 = 'transformation_template_Thermocycler_Gen2_APIv2.8.py'
-TRANSFORMATION_TEMP_FNAME_5 = 'transformation_template_Thermocycler_Gen2_12wellplate_APIv2_19.py'
-TRANSFORMATION_TEMP_FNAME_6 = 'transformation_template_Thermocycler_Gen2_12wellplate_APIv2.8.py'
 
-#CLIP_FNAME_1 = '1_clip_FLEX_APIv2_19.py'
-CLIP_FNAME_2 = '1_MRes_clip_Thermocycler_Gen2_APIv2_19.py'
-CLIP_FNAME_3 = '1_clip_ot2_Thermocycler_APIv2.8.py'
-CLIP_FNAME_4 = '1_clip_ot2_Thermocycler_Gen2_APIv2_19.py'
+CLIP_FNAME_1 = '1_Flex_clip_APIv2_21.py'
+CLIP_FNAME_2 = '1_OT2_clip_APIv2_21.py'
 
-#MAGBEAD_FNAME_1 = '2_purification_FLEX_APIv2_19.py'
-MAGBEAD_FNAME_2 = '2_MRes_purification_ot2_APIv2_19.py'
+MAGBEAD_FNAME_1 = '2_Flex_purification_APIv2_21.py'
+MAGBEAD_FNAME_2 = '2_OT2_purification_APIv2_21.py'
 
-#F_ASSEMBLY_FNAME_1 = '3_assembly_FLEX_APIv2_19.py'
-F_ASSEMBLY_FNAME_2 = '3_MRes_assembly_ot2_Thermocycler_Gen2_APIv2_19.py'
-F_ASSEMBLY_FNAME_3 = '3_assembly_ot2_Thermocycler_Gen1_APIv2_19.py'
-F_ASSEMBLY_FNAME_4 = '3_assembly_ot2_Thermocycler_Gen2_APIv2_19.py'
+F_ASSEMBLY_FNAME_1 = '3_Flex_assembly_APIv2_21.py'
+F_ASSEMBLY_FNAME_2 = '3_OT2_assembly_APIv2_21.py'
 
-#TRANSFORMATION_FNAME_1 = '4_transformation_FLEX_12wellplate_APIv2_19.py'
-TRANSFORMATION_FNAME_2 = '4_MRes_transformation_ot2_Thermocycler_Gen2_12wellplate_APIv2_19.py'
+TRANSFORMATION_FNAME_1 = '4_Flex_transformation_12wellplate_APIv2_21.py'
+TRANSFORMATION_FNAME_2 = '4_OT2_transformation_12wellplate_APIv2_21.py.py'
 #TRANSFORMATION_FNAME_3 = '4_transformation_ot2_Thermocycler_APIv2.8.py'
 #TRANSFORMATION_FNAME_4 = '4_transformation_ot2_Thermocycler_12wellplate_APIv2.8.py'
-TRANSFORMATION_FNAME_5 = '4_transformation_ot2_Thermocycler_Gen1_12wellplate_APIv2_19.py'
-TRANSFORMATION_FNAME_6 = '4_transformation_ot2_Thermocycler_Gen2_12wellplate_APIv2_19.py'
 
 CLIPS_INFO_FNAME = 'clip_run_info.csv'
 FINAL_ASSEMBLIES_INFO_FNAME = 'final_assembly_run_info.csv'
@@ -95,6 +86,7 @@ SPOTTING_VOLS_DICT = {2: 5, 3: 5, 4: 5, 5: 5, 6: 5, 7: 5}
 SPOTTING_VOLS_DICT_12 = {2: 40, 3: 40, 4: 40, 5: 40, 6: 40, 7: 40}
 
 # Constant lists
+    # What are these used for?
 SOURCE_DECK_POS = ['2', '5', '8', '7', '10', '11']
 
 # Settings
@@ -119,7 +111,7 @@ def __cli():
                                             'Type "python dnabot_app.py nogui -h" for more info.')
     parser_nogui = subparsers.add_parser('nogui')
     parser_nogui.add_argument('--robot_type',
-                              help='Robot type, OT2 or FLEX? Default:OT2',
+                              help='Robot type, OT2 or Flex? Default:OT2',
                               default='OT2', type=str)
     parser_nogui.add_argument('--construct_path',
                               help='File listing constructs to be implemented.',
@@ -140,7 +132,7 @@ def __cli():
                                    "one containing the 'construct_path' file",
                               default=None, type=str or None)
     parser_nogui.add_argument('--template_dir',
-                              help="Template directory. Default: 'template_ot2_scripts' "
+                              help="Template directory. Default: 'template_opentrons_scripts' "
                                    "located next to the present script.",
                               default=None, type=str or None)
     # Makes life easier to decide if we should switch to GUI or not
@@ -168,6 +160,7 @@ def __info_from_gui(user_settings: dict) -> dict:
         actual settings to be used
     """
     user_settings = {
+        'hardware': user_settings['hardware'],
         'labwares': user_settings['labwares'],
         'parameters': user_settings['parameters'],
         'construct_path': None,
@@ -219,6 +212,7 @@ def main():
         robot_type = user_inputs['robot_type']
         etoh_well = user_inputs['etoh_well']
         soc_column = user_inputs['soc_column']
+        hardware_settings =user_settings['hardware']
         labware_settings = user_inputs['labwares']  # update labwares IDs
         parameter_settings = user_inputs['parameters']  # update parameters
         construct_path = user_inputs['construct_path']
@@ -293,119 +287,74 @@ def main():
     print('Writing files...')
     # Write OT2 scripts
 
-    # generate_ot2_script(
-    #     CLIP_FNAME_1,
-    #     os.path.join(template_dir_path, CLIP_TEMP_FNAME_1),
-    #     clips_dict=clips_dict,
-    #     robot_type=robot_type,
-    #     __LABWARES=labware_settings,
-    #     __PARAMETERS=parameter_settings)
 
-    generate_ot2_script(
+    generate_opentrons_script(
+        CLIP_FNAME_1,
+        os.path.join(template_dir_path, CLIP_TEMP_FNAME_1),
+        clips_dict=clips_dict,
+        __HARDWARE=hardware_settings,
+        __LABWARES=labware_settings,
+        __PARAMETERS=parameter_settings)
+    generate_opentrons_script(
         CLIP_FNAME_2,
         os.path.join(template_dir_path, CLIP_TEMP_FNAME_2),
         clips_dict=clips_dict,
-        robot_type=robot_type,
+        __HARDWARE=hardware_settings,
         __LABWARES=labware_settings,
         __PARAMETERS=parameter_settings)
-    generate_ot2_script(
-        CLIP_FNAME_3,
-        os.path.join(template_dir_path, CLIP_TEMP_FNAME_3),
-        clips_dict=clips_dict,
-        robot_type=robot_type,
-        __LABWARES=labware_settings,
-        __PARAMETERS=parameter_settings)
-    generate_ot2_script(
-        CLIP_FNAME_4,
-        os.path.join(template_dir_path, CLIP_TEMP_FNAME_4),
-        clips_dict=clips_dict,
-        robot_type=robot_type,
-        __LABWARES=labware_settings,
-        __PARAMETERS=parameter_settings)
+
        
-    # generate_ot2_script(
-    #     MAGBEAD_FNAME_1,
-    #     os.path.join(template_dir_path, MAGBEAD_TEMP_FNAME_1),
-    #     sample_number=magbead_sample_number,
-    #     ethanol_well=etoh_well)
-    generate_ot2_script(
+    generate_opentrons_script(
+        MAGBEAD_FNAME_1,
+        os.path.join(template_dir_path, MAGBEAD_TEMP_FNAME_1),
+        sample_number=magbead_sample_number,
+        ethanol_well=etoh_well,
+        __HARDWARE=hardware_settings,
+        __LABWARES=labware_settings,
+        __PARAMETERS=parameter_settings)
+    
+    generate_opentrons_script(
         MAGBEAD_FNAME_2,
         os.path.join(template_dir_path, MAGBEAD_TEMP_FNAME_2),
         sample_number=magbead_sample_number,
         ethanol_well=etoh_well,
-        robot_type=robot_type,
+        __HARDWARE=hardware_settings,
         __LABWARES=labware_settings,
         __PARAMETERS=parameter_settings)
     
-    #generate_ot2_script(
-        # F_ASSEMBLY_FNAME_1,
-        # os.path.join(template_dir_path, F_ASSEMBLY_TEMP_FNAME_1),
-        # final_assembly_dict=final_assembly_dict,
-        # tiprack_num=final_assembly_tipracks)
-    generate_ot2_script(
+    generate_opentrons_script(
+        F_ASSEMBLY_FNAME_1,
+        os.path.join(template_dir_path, F_ASSEMBLY_TEMP_FNAME_1),
+        final_assembly_dict=final_assembly_dict,
+        tiprack_num=final_assembly_tipracks,
+        __HARDWARE=hardware_settings,
+        __LABWARES=labware_settings,
+        __PARAMETERS=parameter_settings)
+
+    generate_opentrons_script(
         F_ASSEMBLY_FNAME_2,
         os.path.join(template_dir_path, F_ASSEMBLY_TEMP_FNAME_2),
         final_assembly_dict=final_assembly_dict,
-        robot_type=robot_type,
         tiprack_num=final_assembly_tipracks,
-        __LABWARES=labware_settings)
-    generate_ot2_script(
-        F_ASSEMBLY_FNAME_3,
-        os.path.join(template_dir_path, F_ASSEMBLY_TEMP_FNAME_3),
-        final_assembly_dict=final_assembly_dict,
-        robot_type=robot_type,
-        tiprack_num=final_assembly_tipracks,
-        __LABWARES=labware_settings)
-    generate_ot2_script(
-        F_ASSEMBLY_FNAME_4,
-        os.path.join(template_dir_path, F_ASSEMBLY_TEMP_FNAME_4),
-        final_assembly_dict=final_assembly_dict,
-        robot_type=robot_type,
-        tiprack_num=final_assembly_tipracks,
-        __LABWARES=labware_settings)
+        __HARDWARE=hardware_settings,
+        __LABWARES=labware_settings,
+        __PARAMETERS=parameter_settings)   
     
-    # generate_ot2_script(
-    #     TRANSFORMATION_FNAME_1,
-    #     os.path.join(template_dir_path, TRANSFORMATION_TEMP_FNAME_1),
-    #     robot_type=robot_type,
-    #     spotting_tuples=spotting_tuples,
-    #     soc_well=f"A{soc_column}")
-    generate_ot2_script(
+    generate_opentrons_script(
+        TRANSFORMATION_FNAME_1,
+        os.path.join(template_dir_path, TRANSFORMATION_TEMP_FNAME_1),
+        spotting_tuples=spotting_tuples,
+        soc_well=f"A{soc_column}",
+        __HARDWARE=hardware_settings,
+        __LABWARES=labware_settings,
+        __PARAMETERS=parameter_settings)
+
+    generate_opentrons_script(
         TRANSFORMATION_FNAME_2,
         os.path.join(template_dir_path, TRANSFORMATION_TEMP_FNAME_2),
         spotting_tuples=spotting_tuples,
-        robot_type=robot_type,
         soc_well=f"A{soc_column}",
-        __LABWARES=labware_settings,
-        __PARAMETERS=parameter_settings)
-    # generate_ot2_script(
-    #     TRANSFORMATION_FNAME_3,
-    #     os.path.join(template_dir_path, TRANSFORMATION_TEMP_FNAME_3),
-    #     spotting_tuples=spotting_tuples,robot_type=robot_type,
-    #     soc_well=f"A{soc_column}",
-    #     __LABWARES=labware_settings,
-    #     __PARAMETERS=parameter_settings)
-    # generate_ot2_script(
-    #     TRANSFORMATION_FNAME_4,
-    #     os.path.join(template_dir_path, TRANSFORMATION_TEMP_FNAME_4),
-    #     spotting_tuples=spotting_tuples_12,robot_type=robot_type,
-    #     soc_well=f"A{soc_column}",
-    #     __LABWARES=labware_settings,
-    #     __PARAMETERS=parameter_settings)
-    generate_ot2_script(
-        TRANSFORMATION_FNAME_5,
-        os.path.join(template_dir_path, TRANSFORMATION_TEMP_FNAME_5),
-        spotting_tuples=spotting_tuples_12,
-        robot_type=robot_type,
-        soc_well=f"A{soc_column}",
-        __LABWARES=labware_settings,
-        __PARAMETERS=parameter_settings)
-    generate_ot2_script(
-        TRANSFORMATION_FNAME_6,
-        os.path.join(template_dir_path, TRANSFORMATION_TEMP_FNAME_6),
-        spotting_tuples=spotting_tuples_12,
-        robot_type=robot_type,
-        soc_well=f"A{soc_column}",
+        __HARDWARE=hardware_settings,
         __LABWARES=labware_settings,
         __PARAMETERS=parameter_settings)
 
@@ -432,19 +381,19 @@ def main():
 
     # Write deck position info
     with open(metainfo_dir / f"{construct_base}_{DECK_OUTPUT_FNAME}", "w") as ofh:
-        for fname in (CLIP_FNAME_2, CLIP_FNAME_3, CLIP_FNAME_4):
+        for fname in (CLIP_FNAME_1, CLIP_FNAME_2):
             deck = slots.get_positions_from_clip(fname)
             s = slots.format_deck_info(deck, section = f"Clip reaction script: {fname}")
             ofh.write(s)
-        for fname in (MAGBEAD_FNAME_2,):
+        for fname in (MAGBEAD_FNAME_1, MAGBEAD_FNAME_2):
             deck = slots.get_positions_from_purif(fname)
             s = slots.format_deck_info(deck, section = f"Purification script: {fname}")
             ofh.write(s)
-        for fname in (F_ASSEMBLY_FNAME_2, F_ASSEMBLY_FNAME_3, F_ASSEMBLY_FNAME_4):
+        for fname in (F_ASSEMBLY_FNAME_1, F_ASSEMBLY_FNAME_2):
             deck = slots.get_positions_from_assembly(fname)
             s = slots.format_deck_info(deck, section = f"Assembly script: {fname}")
             ofh.write(s)
-        for fname in (TRANSFORMATION_FNAME_2, TRANSFORMATION_FNAME_5, TRANSFORMATION_FNAME_6):
+        for fname in (TRANSFORMATION_FNAME_1, TRANSFORMATION_FNAME_2):
             deck = slots.get_positions_from_transfo(fname)
             s = slots.format_deck_info(deck, section = f"Transformation script: {fname}")
             ofh.write(s)
@@ -742,14 +691,14 @@ def generate_spotting_tuples_12(constructs_list, spotting_vols_dict):
     return spotting_tuples_12
 
 
-def generate_ot2_script(ot2_script_path, template_path, **kwargs):
-    """Generates an ot2 script named 'ot2_script_path', where kwargs are
+def generate_opentrons_script(opentrons_script_path, template_path, **kwargs):
+    """Generates an ot2 script named 'opentrons_script_path', where kwargs are
     written as global variables at the top of the script. For each kwarg, the
     keyword defines the variable name while the value defines the name of the
     variable. The remainder of template file is subsequently written below.
 
     """
-    with open(ot2_script_path, 'w') as wf:
+    with open(opentrons_script_path, 'w') as wf:
         with open(template_path, 'r') as rf:
             for index, line in enumerate(rf):
                 if line[:3] == 'def':

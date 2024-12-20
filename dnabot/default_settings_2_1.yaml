@@ -1,25 +1,29 @@
 hardware:
-  # Pipettes #############################################
-  # Opentrons P20 Single-Channel Electronic Pipette
+  # Opentrons low volume Single-Channel Electronic Pipette
+  robot_type:
+    id: FLEX
+    #id:OT2
   single_pipette:
     id: p20_single_gen2
     #id: flex_1channel_50 #FLEX
   single_pipette_mount:
     id: right
     #id: left
-  # Opentrons P300 8-Channel Electronic Pipette
+    # Opentrons 8-Channel Electronic Pipette for up to 300 ul
   multi_pipette:
     id: p300_multi_gen2
     #id: flex_8channel_50 #FLEX
     #id: flex_8channel_1000 #FLEX
-    multi_pipette_mount:
+  multi_pipette_mount:
     id: left
     #id: right
 
+  # Thermocycler is required for the clip and transformation step
   thermocycler:
   id: "thermocyclerModuleV2"
   #id: "thermocyclerModuleV1"
 
+  # Magnetic module or block is required for the purification step
   mag_deck:
     id: magneticModuleV1
     #id: magneticModuleV2  # BRS

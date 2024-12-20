@@ -22,6 +22,11 @@ conda activate <myenv>
 conda install -c conda-forge -c brsynth dnabot
 ```
 
+## Installation from Github
+You can download and run dnabot from Github in your standard environment. Note that Opentrons only works with Python up to version 3.10 so you are encouraged to ensure that you work in this environment to avoid clashes.
+You will need to install all of the packages listed at the top of the code as well as the tabulate module.
+
+
 `<myenv>` has to be replaced by whatever meaningful name that will pleased the user.
 
 ## Usage

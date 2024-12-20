@@ -7,6 +7,6 @@ protocol_file = open('c:/users/geoff/github/DNA-BOT/dnabot/template_opentrons_sc
 #opentrons.simulate.simulate(protocol_file) -L, -custom-labware-path=='C:/users/geoff/github/DNA-BOT/labware/Custom_labware'
 
 #protocol_file = open('c:/users/geoff/github/DNA-BOT/dnabot/template_ot2_scripts/simple_protocol_test.py')
-opentrons.simulate.simulate(protocol_file, robot_type="Flex") 
+opentrons.simulate.simulate(protocol_file) 
 #opentrons.simulate.simulate(protocol_file) -L, -custom-labware-path=='C:/users/geoff/github/DNA-BOT/labware/Custom_labware'
 

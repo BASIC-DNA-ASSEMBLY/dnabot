@@ -115,7 +115,7 @@ class GUI:
         message_1 = tk.Message(
             self.frame,
             text=(
-                "1 - From the dropdown menus select the robot that you are using: OT2 or FLEX "
+                "1 - From the dropdown menus select the robot that you are using: OT2 or Flex "
                 ),
             width=850,
             anchor='w',
@@ -127,7 +127,7 @@ class GUI:
         robot_type_label.grid(row=irow, column=0, sticky='e')
         self.robot_type = tk.StringVar(self.frame)
         self.robot_type.set("OT2")
-        Robot_choice= ["OT2","FLEX"]
+        Robot_choice= ["OT2","Flex"]
         Robot_type_x=tk.OptionMenu(self.frame, self.robot_type, 'OT2')
         Robot_type_x=tk.OptionMenu(self.frame, self.robot_type, *Robot_choice)
         Robot_type_x.grid(row=irow, column=1, sticky=tk.W)
@@ -151,11 +151,11 @@ class GUI:
         message_1.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
 
         irow += 1
-        single_pipette_label = tk.Label(self.frame, text='Single Pipette: OT2 P20 or FLEX P50 Pipette', font=('Arial', 12))
+        single_pipette_label = tk.Label(self.frame, text='Single Pipette: OT2 P20 or Flex P50 Pipette', font=('Arial', 12))
         single_pipette_label.grid(row=irow, column=0, sticky='e')
         self.single_pipette = tk.StringVar(self.frame)
         self.single_pipette.set("p20_single_gen2")
-        single_pipette_choice= ["p20_single_gen2","flex_1channel_50"]
+        single_pipette_choice= ["p20_single_gen2","Flex_1channel_50"]
         single_pipette_x=tk.OptionMenu(self.frame, self.single_pipette, *single_pipette_choice)
         single_pipette_x.grid(row=irow, column=1, sticky=tk.W)
         single_pipette_x.config(font=GUI.__APP_FONT)
@@ -170,11 +170,11 @@ class GUI:
         single_pipette_mount_x.config(font=GUI.__APP_FONT)
 
         irow += 1
-        multi_pipette_label = tk.Label(self.frame, text='Multi-channel Pipette: OT2 P300 or FLEX P1000 8-channel Pipette', font=('Arial', 12))
+        multi_pipette_label = tk.Label(self.frame, text='Multi-channel Pipette: OT2 P300 or Flex P1000 8-channel Pipette', font=('Arial', 12))
         multi_pipette_label.grid(row=irow, column=0, sticky='e')
         self.multi_pipette = tk.StringVar(self.frame)
         self.multi_pipette.set("p300_multi_gen2")
-        multi_pipette_choice= ["p300_multi_gen2","flex_8channel_1000"]
+        multi_pipette_choice= ["p300_multi_gen2","Flex_8channel_1000"]
         multi_pipette_x=tk.OptionMenu(self.frame, self.multi_pipette, *multi_pipette_choice)
         multi_pipette_x.grid(row=irow, column=1, sticky=tk.W)
         multi_pipette_x.config(font=GUI.__APP_FONT)
@@ -579,12 +579,13 @@ class GUI:
         self.user_settings['robot_type'] = self.robot_type.get()
 
         # Hardware IDs
-        self.user_settings['hardware']['single_pipette']['id'] = self.hardware_single_pipette.get()
-        self.user_settings['hardware']['single_pipette_mount']['id'] = self.hardware_single_pipette_mount.get()
-        self.user_settings['hardware']['multi_pipette']['id'] = self.hardware_multi_pipette.get()
-        self.user_settings['hardware']['multi_pipette_mount']['id'] = self.hardware_multi_pipette_mount.get()
-        self.user_settings['hardware']['thermocycler']['id'] = self.hardware_thermocycler.get()
-        self.user_settings['hardware']['mag_deck']['id'] = self.hardware_mag_deck_entry.get()
+        self.user_settings['hardware'] ['robot_type']['id'] = self.robot_type.get()
+        self.user_settings['hardware']['single_pipette']['id'] = self.single_pipette.get()
+        self.user_settings['hardware']['single_pipette_mount']['id'] = self.single_pipette_mount.get()
+        self.user_settings['hardware']['multi_pipette']['id'] = self.multi_pipette.get()
+        self.user_settings['hardware']['multi_pipette_mount']['id'] = self.multi_pipette_mount.get()
+        self.user_settings['hardware']['thermocycler']['id'] = self.thermocycler.get()
+        self.user_settings['hardware']['mag_deck']['id'] = self.mag_deck.get()
            
         # Labware IDs
         self.user_settings['labwares']['24_tuberack_1500ul']['id'] = self.labware_24_tuberack_1500ul_entry.get()
