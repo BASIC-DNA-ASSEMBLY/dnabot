@@ -2,8 +2,10 @@ from opentrons import protocol_api
 #from mix_functions import mix_linkers_function, mix_parts_function
 import numpy as np
 
-# Rename to 'clip_template' and paste into 'template_ot2_scripts' folder in DNA-BOT to use
-# Author:  Zhouheng Li
+# Revised commands adapt to both OT2 and Flex robots, only the header needs to be changed.
+# new __HARDWARE configuration defines all of the available hardware setups
+# gripper module for Flex is currently not included - this would only impact script 3 purification.
+
 #metadata
 metadata = {
      'protocolName': 'DNABOT Step 1: Clip Reaction with thermocycler (Flex Protocol)',
@@ -12,8 +14,6 @@ metadata = {
 
 requirements = {"robotType": "Flex", "apiLevel": "2.20"}
 
-'''
-'''
 clips_dict={"prefixes_wells": ["A1", "B1", "C1", "D1", "E1", "F1"], 
             #"prefixes_plates": ["2", "2", "2", "2", "2", "2"], 
             "prefixes_plates": ["D2", "D2", "D2", "D2", "D2", "D2"], 
@@ -26,20 +26,23 @@ clips_dict={"prefixes_wells": ["A1", "B1", "C1", "D1", "E1", "F1"],
             "parts_vols": [1, 1, 1, 1, 1, 1], 
             "water_vols": [7.0, 7.0, 7.0, 7.0, 7.0, 7.0]}
 
-__HARDWARE={"thermocycler": {"id": "thermocyclerModuleV2"},
+__HARDWARE={"robot_type": {"id": "Flex"},
+            "thermocycler": {"id": "thermocyclerModuleV2"},
             "single_pipette": {"id": "flex_1channel_50"},
             "single_pipette_mount":{"id":"right"},
             "multi_pipette":  {"id": "flex_8channel_1000"},
             "multi_pipette_mount":{"id":"left"},
             "mag_deck": {"id":"magneticBlockV1"},
-            }
-
-__LABWARES={
-            #"p20_single": {"id": "p20_single_gen2"}, 
+            #"mag_deck": {"id": "magneticModuleV1"}, 
+            #             
+            #"single_pipette": {"id": "p20_single_gen2"}
             #"p20_single": {"id": "flex_1channel_50"},
             #"p300_multi": {"id": "p300_multi_gen2"}, 
             #"p300_multi": {"id": "flex_8channel_50"},  
-            #"mag_deck": {"id": "magneticModuleV1"}, 
+            }
+
+__LABWARES={
+
             #"mag_deck": {"id": "magneticBlockV1"},
             #"96_tiprack_20ul": {"id": "opentrons_96_tiprack_20ul"},
             "96_tiprack_20ul": {"id": "opentrons_flex_96_tiprack_50ul"}, 
@@ -64,8 +67,8 @@ __LABWARES={
 __PARAMETERS={"clip_keep_thermo_lid_closed": {"value": "No", "id": "No"}, 
               "premix_linkers": {"value": "Yes", "id": "Yes"}, 
               "premix_parts": {"value": "Yes", "id": "Yes"},
-              "linkers_volume": {"value": 20}, 
-              "parts_volume": {"value": 20}, 
+              "linkers_volume": {"value": 120}, 
+              "parts_volume": {"value": 60}, 
               "thermo_temp": {"value": 4}, 
               #"purif_magdeck_height": {"value": 10.8}, 
               "purif_wash_time": {"value": 0.5}, 
@@ -83,7 +86,8 @@ def run(protocol: protocol_api.ProtocolContext):
     ### Constants - these have been moved out of the def clip() for clarity
 
     #flex need trash bin
-    trash = protocol.load_trash_bin("A3")
+    if __HARDWARE['robot_type']['id']=='Flex':
+        trash = protocol.load_trash_bin("A3")
     #Tiprack
     tiprack_type=__LABWARES['96_tiprack_20ul']['id']
     INITIAL_TIP = 'A1'
@@ -97,13 +101,16 @@ def run(protocol: protocol_api.ProtocolContext):
     PIPETTE_MOUNT = __HARDWARE['single_pipette_mount']['id']
     #Pipette_mount = 'right'
         ### Load Pipette
-        # checks if it's a P20 Single pipette
-    if PIPETTE_TYPE != 'flex_1channel_50':
-        print('Define labware must be changed to use', PIPETTE_TYPE)
-        exit()
+        # checks if it's a P20 Single pipette - pipette and robot validation are done by Opentrons
+    # if PIPETTE_TYPE != 'flex_1channel_50':
+    #     print('Define labware must be changed to use', PIPETTE_TYPE)
+    #     exit()
     #thermocycler module - turn off lid and cool plate to reduce evaporation
     #load thermoname from HARDWARE profile in user_settings
-    tc_mod = protocol.load_module(module_name=__HARDWARE['thermocycler']['id'], location = "B1")
+    if __HARDWARE['robot_type']['id']=='Flex':
+        tc_mod = protocol.load_module(module_name=__HARDWARE['thermocycler']['id'], location = "B1")
+    else:
+        tc_mod = protocol.load_module(module_name=__HARDWARE['thermocycler']['id'])
     tc_mod.open_lid()
     tc_mod.deactivate_lid()
     tc_mod.set_block_temperature(temperature=__PARAMETERS['thermo_temp']['value']) 
@@ -125,8 +132,7 @@ def run(protocol: protocol_api.ProtocolContext):
     WATER_WELL = 'A2'
     MASTER_MIX_VOLUME = 20
 
-    #choose to enable pre-mix for prefixes/suffixes and parts plate
-    #Mix_linkers_bool = __PARAMETERS["premix_linkers"]['id']
+    #translates the __PARAMETER setting for mix into a boolean for the mix functions
     if __PARAMETERS['premix_linkers']['id']=='Yes':
         Mix_linkers_bool=True
     else:
@@ -137,25 +143,39 @@ def run(protocol: protocol_api.ProtocolContext):
     else:
         Mix_parts_bool = False
 
-    def mix_linkers_function(Mix_linkers_bool, clips_dict, pipette_name, source_plates):
-        pipette = pipette_name
-        #pipetting speeds - default rates in ul /s
-        pipette.flow_rate.aspirate = 50
-        pipette.flow_rate.dispense = 50
-        pipette.flow_rate.blow_out = 100
-        #pipetting rates below - expressed as multiple of default 
+    def mix_linkers_function(Mix_linkers_bool, clips_dict, pipette, source_plates, PIPETTE_TYPE):
+            #pipetting speeds - default rates in ul /s
+        if __HARDWARE['robot_type']['id']=='Flex':
+            if PIPETTE_TYPE=="flex_1channel_50":
+                pipette.flow_rate.aspirate = 50
+                pipette.flow_rate.dispense = 50
+                pipette.flow_rate.blow_out = 100
+            elif __HARDWARE['robot_type']['id']=='OT2':            
+                if PIPETTE_TYPE=="p20_single_gen2":
+                    pipette.flow_rate.aspirate = 10
+                    pipette.flow_rate.dispense = 10
+                    pipette.flow_rate.blow_out = 20
+                else: 
+                    print("Don't have a single-channel P20 or P50 pipette loaded"),
+                    protocol.pause()
+        # relative rates for fine-tuning pipetting steps
         high = 2
         normal = 1
         slow = 0.4
         vslow = 0.2
-        #Linker reagent volume - specify minimum volume in linker wells
-        #linker_volume=20
-        #set maximum volume for mixing calculations as 40 as P20 pipette being used
+
+        #set maximum volume for mixing calculations as 100 for Flex and 40 for OT2 so max volume of pipette is not exceeded:
         #maximum linker mix is set as linker_vol/2
-        if __PARAMETERS['linkers_volume']['value']>100:
-            linker_vol=100
-        else:
-            linker_vol=__PARAMETERS['linkers_volume']['value']
+        if __HARDWARE['robot_type']['id']=='Flex':
+            if __PARAMETERS['linkers_volume']['value']>100:
+                linker_vol=100
+            elif __HARDWARE['robot_type']['id']=='OT2':
+                if __PARAMETERS['linkers_volume']['value']>40:
+                    linker_vol=40
+            else:
+                linker_vol=__PARAMETERS['linkers_volume']['value']
+        
+        #linker_offset=np.log(linker_vol)
 
         if Mix_linkers_bool:
             #Extracts lists from clips_dict
@@ -193,7 +213,7 @@ def run(protocol: protocol_api.ProtocolContext):
                 pipette.aspirate(linker_vol/2, source_plates[prefixes_unique[clip_num, 0]][prefixes_unique[clip_num, 1]].bottom(2), rate=normal)
                 pipette.dispense(linker_vol/2, source_plates[prefixes_unique[clip_num, 0]][prefixes_unique[clip_num, 1]].bottom(3), rate=high)
                 pipette.aspirate(linker_vol/2, source_plates[prefixes_unique[clip_num, 0]][prefixes_unique[clip_num, 1]].bottom(2), rate=normal)
-                pipette.dispense(linker_vol/2, source_plates[prefixes_unique[clip_num, 0]][prefixes_unique[clip_num, 1]].bottom(linker_vol/20), rate=slow, push_out=linker_vol/20)
+                pipette.dispense(linker_vol/2, source_plates[prefixes_unique[clip_num, 0]][prefixes_unique[clip_num, 1]].bottom(np.log(linker_vol)), rate=slow, push_out=linker_vol/20)
                 pipette.move_to(source_plates[prefixes_unique[clip_num, 0]][prefixes_unique[clip_num, 1]].top(-5)) # move to 5mm below the top of current well
                 protocol.delay(seconds=1)
                 pipette.blow_out()
@@ -209,7 +229,7 @@ def run(protocol: protocol_api.ProtocolContext):
                 pipette.aspirate(linker_vol/2, source_plates[suffixes_unique[clip_num, 0]][suffixes_unique[clip_num, 1]].bottom(2), rate=normal)
                 pipette.dispense(linker_vol/2, source_plates[suffixes_unique[clip_num, 0]][suffixes_unique[clip_num, 1]].bottom(3), rate=high)
                 pipette.aspirate(linker_vol/2, source_plates[suffixes_unique[clip_num, 0]][suffixes_unique[clip_num, 1]].bottom(2), rate=slow)
-                pipette.dispense(linker_vol/2, source_plates[suffixes_unique[clip_num, 0]][suffixes_unique[clip_num, 1]].bottom(linker_vol/20), rate=slow, push_out=linker_vol/20)
+                pipette.dispense(linker_vol/2, source_plates[suffixes_unique[clip_num, 0]][suffixes_unique[clip_num, 1]].bottom(np.log(linker_vol)), rate=slow, push_out=linker_vol/20)
                 pipette.move_to(source_plates[suffixes_unique[clip_num, 0]][suffixes_unique[clip_num, 1]].top(-5)) # move to 5mm below the top of current well
                 protocol.delay(seconds=1)
                 pipette.blow_out()
@@ -218,24 +238,39 @@ def run(protocol: protocol_api.ProtocolContext):
         else:
             pass
 
-    def mix_parts_function(Mix_parts_bool, clips_dict, pipette_name, source_plates):
+    def mix_parts_function(Mix_parts_bool, clips_dict, pipette_name, source_plates, PIPETTE_TYPE):
         pipette = pipette_name
-        
-        pipette.flow_rate.aspirate = 50
-        pipette.flow_rate.dispense = 50
-        pipette.flow_rate.blow_out = 100
+
+        if __HARDWARE['robot_type']['id']=='Flex':
+            if(PIPETTE_TYPE)=="flex_1channel_50":
+                pipette.flow_rate.aspirate = 50
+                pipette.flow_rate.dispense = 50
+                pipette.flow_rate.blow_out = 100
+            elif __HARDWARE['robot_type']['id']=='OT2':            
+                if(PIPETTE_TYPE)=="p20_single_gen2":
+                    pipette.flow_rate.aspirate = 10
+                    pipette.flow_rate.dispense = 10
+                    pipette.flow_rate.blow_out = 20
+                else: 
+                    print("Don't have a single-channel P20 or P50 pipette loaded"),
+                    protocol.pause()
+        # relative rates for fine-tuning pipetting steps
         high = 2
         normal = 1
         slow = 0.4
         vslow = 0.2
-        #Part reagent volume - specify minimum volume in part wells at top of script
-        #set maximum volume for mixing calculations as 40 as P20 pipette being used
-        #maximum linker mix is set as part_vol/2
+        
+        #set maximum volume for mixing calculations as 100 for Flex and 40 for OT2 so max volume of pipette is not exceeded:
+        #maximum linker mix is set as linker_vol/2
     
-        if __PARAMETERS['parts_volume']['value']>100:
-            part_vol=100
-        else:
-            part_vol=__PARAMETERS['parts_volume']['value']
+        if __HARDWARE['robot_type']['id']=='Flex':
+            if __PARAMETERS['parts_volume']['value']>100:
+                part_vol=100
+            elif __HARDWARE['robot_type']['id']=='OT2':
+                if __PARAMETERS['parts_volume']['value']>40:
+                    part_vol=40
+            else:
+                part_vol=__PARAMETERS['parts_volume']['value']
         
         if Mix_parts_bool:
             parts = []
@@ -259,7 +294,7 @@ def run(protocol: protocol_api.ProtocolContext):
                 pipette.aspirate(part_vol/2, source_plates[parts_unique[clip_num, 0]][parts_unique[clip_num, 1]].bottom(2), rate=normal)
                 pipette.dispense(part_vol/2, source_plates[parts_unique[clip_num, 0]][parts_unique[clip_num, 1]].bottom(3), rate=high)
                 pipette.aspirate(part_vol/2, source_plates[parts_unique[clip_num, 0]][parts_unique[clip_num, 1]].bottom(2), rate=slow)
-                pipette.dispense(part_vol/2, source_plates[parts_unique[clip_num, 0]][parts_unique[clip_num, 1]].bottom(part_vol/20), rate=slow, push_out=part_vol/20)
+                pipette.dispense(part_vol/2, source_plates[parts_unique[clip_num, 0]][parts_unique[clip_num, 1]].bottom(np.log(part_vol)), rate=slow, push_out=np.log(part_vol))
                 pipette.move_to(source_plates[parts_unique[clip_num, 0]][parts_unique[clip_num, 1]].top(-5)) # move to 5mm below the top of current well
                 protocol.delay(seconds=1)
                 pipette.blow_out()
@@ -358,13 +393,24 @@ def run(protocol: protocol_api.ProtocolContext):
         
         ###Pre-Mixing of Prefixes and Suffixes or Parts
 
-        mix_linkers_function(Mix_linkers_bool, clips_dict, pipette, source_plates)
-        mix_parts_function(Mix_parts_bool, clips_dict, pipette, source_plates)
+        mix_linkers_function(Mix_linkers_bool, clips_dict, pipette, source_plates, PIPETTE_TYPE)
+        mix_parts_function(Mix_parts_bool, clips_dict, pipette, source_plates, PIPETTE_TYPE)
 
         ### Reset pipette clearance for setting up clip reactions - pipetting small volume into larger volume
-        pipette.flow_rate.aspirate = 50
-        pipette.flow_rate.dispense = 50
-        pipette.flow_rate.blow_out = 100
+        if __HARDWARE['robot_type']['id']=='Flex':
+            if(PIPETTE_TYPE)=="flex_1channel_50":
+                pipette.flow_rate.aspirate = 50
+                pipette.flow_rate.dispense = 50
+                pipette.flow_rate.blow_out = 100
+            elif __HARDWARE['robot_type']['id']=='OT2':            
+                if(PIPETTE_TYPE)=="p20_single_gen2":
+                    pipette.flow_rate.aspirate = 10
+                    pipette.flow_rate.dispense = 10
+                    pipette.flow_rate.blow_out = 20
+                else: 
+                    print("Don't have a single-channel P20 or P50 pipette loaded"),
+                    protocol.pause()
+        
         high = 2
         normal = 1
         slow = 0.5
@@ -413,13 +459,13 @@ def run(protocol: protocol_api.ProtocolContext):
             pipette.dispense(1, destination_wells[clip_num].bottom(3), rate=slow)
             #mix after transfer
             pipette.aspirate(4, destination_wells[clip_num].bottom(1), rate=normal)
-            pipette.dispense(4, destination_wells[clip_num].bottom(4), rate=high)
+            pipette.dispense(4, destination_wells[clip_num].bottom(3), rate=high)
             pipette.aspirate(4, destination_wells[clip_num].bottom(1), rate=normal)
-            pipette.dispense(4, destination_wells[clip_num].bottom(4), rate=high)
+            pipette.dispense(4, destination_wells[clip_num].bottom(3), rate=high)
             pipette.aspirate(4, destination_wells[clip_num].bottom(1), rate=normal)
             pipette.dispense(4, destination_wells[clip_num].bottom(4), rate=normal)
-            pipette.aspirate(5, destination_wells[clip_num].bottom(3), rate=slow)
-            pipette.dispense(5, destination_wells[clip_num].bottom(2), push_out=1, rate=slow)
+            pipette.aspirate(5, destination_wells[clip_num].bottom(2), rate=slow)
+            pipette.dispense(5, destination_wells[clip_num].bottom(3), push_out=1, rate=slow)
             pipette.move_to(destination_wells[clip_num].top(-5))
             protocol.delay(seconds=1)
             pipette.blow_out()
@@ -431,13 +477,13 @@ def run(protocol: protocol_api.ProtocolContext):
             pipette.dispense(1, destination_wells[clip_num].bottom(3), rate=slow)
             #mix after transfer
             pipette.aspirate(4, destination_wells[clip_num].bottom(1), rate=normal)
-            pipette.dispense(4, destination_wells[clip_num].bottom(4), rate=high)
+            pipette.dispense(4, destination_wells[clip_num].bottom(3), rate=high)
             pipette.aspirate(4, destination_wells[clip_num].bottom(1), rate=normal)
-            pipette.dispense(4, destination_wells[clip_num].bottom(4), rate=high)
+            pipette.dispense(4, destination_wells[clip_num].bottom(3), rate=high)
             pipette.aspirate(4, destination_wells[clip_num].bottom(1), rate=normal)
-            pipette.dispense(4, destination_wells[clip_num].bottom(4), rate=normal)
-            pipette.aspirate(5, destination_wells[clip_num].bottom(3), rate=slow)
-            pipette.dispense(5, destination_wells[clip_num].bottom(2), push_out=1, rate=slow)
+            pipette.dispense(4, destination_wells[clip_num].bottom(3), rate=normal)
+            pipette.aspirate(5, destination_wells[clip_num].bottom(2), rate=slow)
+            pipette.dispense(5, destination_wells[clip_num].bottom(3), push_out=1, rate=slow)
             pipette.move_to(destination_wells[clip_num].top(-4))
             protocol.delay(seconds=1)
             pipette.blow_out()
@@ -449,14 +495,14 @@ def run(protocol: protocol_api.ProtocolContext):
             pipette.dispense(parts_vols[clip_num], destination_wells[clip_num].bottom(3), rate=slow)
             #mix after transfer
             pipette.aspirate(15, destination_wells[clip_num].bottom(1), rate=normal)
-            pipette.dispense(15, destination_wells[clip_num].bottom(4), rate=high)
+            pipette.dispense(15, destination_wells[clip_num].bottom(3), rate=high)
             pipette.aspirate(15, destination_wells[clip_num].bottom(1), rate=normal)
-            pipette.dispense(15, destination_wells[clip_num].bottom(4), rate=high)
+            pipette.dispense(15, destination_wells[clip_num].bottom(3), rate=high)
             pipette.aspirate(15, destination_wells[clip_num].bottom(1), rate=normal)
-            pipette.dispense(15, destination_wells[clip_num].bottom(4), rate=normal)
+            pipette.dispense(15, destination_wells[clip_num].bottom(3), rate=normal)
             pipette.aspirate(15, destination_wells[clip_num].bottom(2), rate=slow)
             pipette.dispense(15, destination_wells[clip_num].bottom(3), push_out=2, rate=slow)
-            pipette.move_to(destination_wells[clip_num].top(-4))
+            pipette.move_to(destination_wells[clip_num].top(-5))
             protocol.delay(seconds=1)
             pipette.blow_out()
             pipette.touch_tip(radius=0.9, v_offset=-5, speed=10)
