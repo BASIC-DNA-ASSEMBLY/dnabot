@@ -30,33 +30,33 @@ import slots
 TEMPLATE_DIR_NAME = 'template_opentrons_scripts'
 
 CLIP_TEMP_FNAME_1 = '1_Flex_clip_template_APIv2_21.py'
-CLIP_TEMP_FNAME_2 = '1_OT2_clip_template_APIv2_21.py'
+CLIP_TEMP_FNAME_2 = '1_OT-2_clip_template_APIv2_21.py'
 #CLIP_TEMP_FNAME_4 = 'clip_template_Thermocycler_Gen2_APIv2_19.py'
 
 MAGBEAD_TEMP_FNAME_1 = '2_Flex_purification_template_APIv2_21.py'
-MAGBEAD_TEMP_FNAME_2 = '2_OT2_purification_template_APIv2_21.py'
+MAGBEAD_TEMP_FNAME_2 = '2_OT-2_purification_template_APIv2_21.py'
 
 F_ASSEMBLY_TEMP_FNAME_1 = '3_Flex_assembly_template_APIv2_21.py'
-F_ASSEMBLY_TEMP_FNAME_2 = '3_OT2_assembly_template_APIv2_21.py'
+F_ASSEMBLY_TEMP_FNAME_2 = '3_OT-2_assembly_template_APIv2_21.py'
 #F_ASSEMBLY_TEMP_FNAME_3 = 'assembly_template_Thermocycler_Gen1_APIv2.8.py'
 #F_ASSEMBLY_TEMP_FNAME_4 = 'assembly_template_Thermocycler_Gen2_APIv2.8.py'
 
 TRANSFORMATION_TEMP_FNAME_1 = '4_Flex_transformation_template_12wellplate_APIv2_21.py'
-TRANSFORMATION_TEMP_FNAME_2 = '4_OT2_transformation_template_12wellplate_APIv2_21.py'
+TRANSFORMATION_TEMP_FNAME_2 = '4_OT-2_transformation_template_12wellplate_APIv2_21.py'
 #TRANSFORMATION_TEMP_FNAME_3 = 'transformation_template_Thermocycler_Gen1_APIv2.8.py'
 #TRANSFORMATION_TEMP_FNAME_4 = 'transformation_template_Thermocycler_Gen2_APIv2.8.py'
 
 CLIP_FNAME_1 = '1_Flex_clip_APIv2_21.py'
-CLIP_FNAME_2 = '1_OT2_clip_APIv2_21.py'
+CLIP_FNAME_2 = '1_OT-2_clip_APIv2_21.py'
 
 MAGBEAD_FNAME_1 = '2_Flex_purification_APIv2_21.py'
-MAGBEAD_FNAME_2 = '2_OT2_purification_APIv2_21.py'
+MAGBEAD_FNAME_2 = '2_OT-2_purification_APIv2_21.py'
 
 F_ASSEMBLY_FNAME_1 = '3_Flex_assembly_APIv2_21.py'
-F_ASSEMBLY_FNAME_2 = '3_OT2_assembly_APIv2_21.py'
+F_ASSEMBLY_FNAME_2 = '3_OT-2_assembly_APIv2_21.py'
 
 TRANSFORMATION_FNAME_1 = '4_Flex_transformation_12wellplate_APIv2_21.py'
-TRANSFORMATION_FNAME_2 = '4_OT2_transformation_12wellplate_APIv2_21.py.py'
+TRANSFORMATION_FNAME_2 = '4_OT-2_transformation_12wellplate_APIv2_21.py.py'
 #TRANSFORMATION_FNAME_3 = '4_transformation_ot2_Thermocycler_APIv2.8.py'
 #TRANSFORMATION_FNAME_4 = '4_transformation_ot2_Thermocycler_12wellplate_APIv2.8.py'
 
@@ -72,7 +72,7 @@ T4_BUFF_VOL = 3
 BSAI_VOL = 1
 T4_LIG_VOL = 0.5
 CLIP_MAST_WATER = 15.5
-PART_PER_CLIP = 200
+ngDNA_PART_PER_CLIP = 200
 MIN_VOL = 1
 MAX_CONSTRUCTS = 96
 MAX_CLIPS = 48
@@ -111,8 +111,8 @@ def __cli():
                                             'Type "python dnabot_app.py nogui -h" for more info.')
     parser_nogui = subparsers.add_parser('nogui')
     parser_nogui.add_argument('--robot_type',
-                              help='Robot type, OT2 or Flex? Default:OT2',
-                              default='OT2', type=str)
+                              help='Robot type, OT-2 or Flex? Default:OT-2',
+                              default='OT-2', type=str)
     parser_nogui.add_argument('--construct_path',
                               help='File listing constructs to be implemented.',
                               required=True)
@@ -209,7 +209,7 @@ def main():
             output_dir = os.path.dirname(construct_path)
     else:
         user_inputs = __info_from_gui(user_settings)
-        robot_type = user_inputs['robot_type']
+        #robot_type = user_inputs['robot_type'] under 'hardware'
         etoh_well = user_inputs['etoh_well']
         soc_column = user_inputs['soc_column']
         hardware_settings =user_settings['hardware']
@@ -261,7 +261,7 @@ def main():
     clips_df = generate_clips_df(constructs_list)
     sources_dict = generate_sources_dict(sources_paths)
 
-    # Calculate OT2 script variables
+    # Calculate OT-2 script variables
     print('Calculating OT-2 variables...')
     clips_dict = generate_clips_dict(
         clips_df,
@@ -285,7 +285,7 @@ def main():
         )
 
     print('Writing files...')
-    # Write OT2 scripts
+    # Write OT-2 scripts
 
 
     generate_opentrons_script(
@@ -561,7 +561,7 @@ def generate_clips_dict(clips_df, sources_dict):
                                                 * clip_info['number'])
             else:
                 part_vol = round(
-                    PART_PER_CLIP / float(sources_dict[part][1]), 1)
+                    ngDNA_PART_PER_CLIP / float(sources_dict[part][1]), 1)
                 if part_vol < MIN_VOL:
                     part_vol = MIN_VOL
                 elif part_vol > max_part_vol:
