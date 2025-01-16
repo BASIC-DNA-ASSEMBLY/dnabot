@@ -76,15 +76,15 @@ labwares:
     id: nest_96_wellplate_100ul_pcr_full_skirt
   
   # Transformation plate with thermocycler (step: transformation)
-  transfo_plate:
+  transform_plate:
     #id: 4ti0960rig_96_wellplate_200ul
     # id: black_96_wellplate_200ul_pcr  # BRS (black)
     id: nest_96_wellplate_100ul_pcr_full_skirt
   # Transformation plate without thermocycler (step: transformation)
-  transfo_plate_wo_thermo:
-    #id: 4ti0960rig_96_wellplate_200ul
-    # id: green_96_wellplate_200ul_pcr  # BRS (transparent)
-    id: nest_96_wellplate_100ul_pcr_full_skirt
+  # transfo_plate_wo_thermo:
+  #   #id: 4ti0960rig_96_wellplate_200ul
+  #   # id: green_96_wellplate_200ul_pcr  # BRS (transparent)
+  #   id: nest_96_wellplate_100ul_pcr_full_skirt
 
   # Agar plate (transformation step)
   agar_plate:
@@ -161,11 +161,11 @@ parameters:
   
   # Transformation step ###################################
   # Incubation temperature
-  transfo_incubation_temp:
+  transform_incubation_temp:
     value: 4
     # value: 8  # BRS
 
   # Incubation time (min)
-  transfo_incubation_time:
+  transform_incubation_time:
     value: 20
     # value: 30  # BRS

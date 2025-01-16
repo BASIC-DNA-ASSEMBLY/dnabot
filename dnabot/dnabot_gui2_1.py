@@ -115,7 +115,7 @@ class GUI:
         message_1 = tk.Message(
             self.frame,
             text=(
-                "1 - From the dropdown menus select the robot that you are using: OT2 or Flex "
+                "1 - From the dropdown menus select the robot that you are using: OT-2 or Flex "
                 ),
             width=850,
             anchor='w',
@@ -126,9 +126,9 @@ class GUI:
         robot_type_label = tk.Label(self.frame, text='Robot Type', font=('Arial', 12, 'bold'))
         robot_type_label.grid(row=irow, column=0, sticky='e')
         self.robot_type = tk.StringVar(self.frame)
-        self.robot_type.set("OT2")
-        Robot_choice= ["OT2","Flex"]
-        Robot_type_x=tk.OptionMenu(self.frame, self.robot_type, 'OT2')
+        self.robot_type.set("OT-2")
+        Robot_choice= ["OT-2","Flex"]
+        Robot_type_x=tk.OptionMenu(self.frame, self.robot_type, 'OT-2')
         Robot_type_x=tk.OptionMenu(self.frame, self.robot_type, *Robot_choice)
         Robot_type_x.grid(row=irow, column=1, sticky=tk.W)
         Robot_type_x.config(font=GUI.__APP_FONT)
@@ -151,7 +151,7 @@ class GUI:
         message_1.grid(row=irow, columnspan=2, padx=5, pady=10, sticky='w')
 
         irow += 1
-        single_pipette_label = tk.Label(self.frame, text='Single Pipette: OT2 P20 or Flex P50 Pipette', font=('Arial', 12))
+        single_pipette_label = tk.Label(self.frame, text='Single Pipette: OT-2 P20 or Flex P50 Pipette', font=('Arial', 12))
         single_pipette_label.grid(row=irow, column=0, sticky='e')
         self.single_pipette = tk.StringVar(self.frame)
         self.single_pipette.set("p20_single_gen2")
@@ -170,7 +170,7 @@ class GUI:
         single_pipette_mount_x.config(font=GUI.__APP_FONT)
 
         irow += 1
-        multi_pipette_label = tk.Label(self.frame, text='Multi-channel Pipette: OT2 P300 or Flex P1000 8-channel Pipette', font=('Arial', 12))
+        multi_pipette_label = tk.Label(self.frame, text='Multi-channel Pipette: OT-2 P300 or Flex P1000 8-channel Pipette', font=('Arial', 12))
         multi_pipette_label.grid(row=irow, column=0, sticky='e')
         self.multi_pipette = tk.StringVar(self.frame)
         self.multi_pipette.set("p300_multi_gen2")
@@ -199,7 +199,7 @@ class GUI:
         thermocycler_x.config(font=GUI.__APP_FONT)
 
         irow += 1
-        mag_deck_label = tk.Label(self.frame, text='OT2 Magnetic Module or Flex Block', font=('Arial', 12,))
+        mag_deck_label = tk.Label(self.frame, text='OT-2 Magnetic Module or Flex Block', font=('Arial', 12,))
         mag_deck_label.grid(row=irow, column=0, sticky='e')
         self.mag_deck = tk.StringVar(self.frame)
         self.mag_deck.set("magnetic module gen1")
@@ -271,12 +271,12 @@ class GUI:
             label="Transformation plate (step: transformation)",
             labware_id='transform_plate',
             irow=irow)
-        # Transformation plate without thermocycler (step: transformation)
-        irow += 1
-        self.labware_transform_plate_wo_thermo_entry = self.__make_labware_entry(
-            label="Transformation plate without thermocycler (step: transformation)",
-            labware_id='transform_plate_wo_thermo',
-            irow=irow)
+        #Transformation plate without thermocycler (step: transformation)
+        # irow += 1
+        # self.labware_transform_plate_wo_thermo_entry = self.__make_labware_entry(
+        #     label="Transformation plate without thermocycler (step: transformation)",
+        #     labware_id='transform_plate_wo_thermo',
+        #     irow=irow)
         # Agar plate (transformation step)
         irow += 1
         self.agar_plate_entry = self.__make_labware_entry(
